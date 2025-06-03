@@ -50,7 +50,7 @@ jobs:
       - name: Checkout chaldea code
         uses: actions/checkout@v4
 
-      - uses: subosito/flutter-action@v2.18.0
+      - uses: subosito/flutter-action@v2.19.0
         with:
           channel: "stable"
           flutter-version-file: "pubspec.yaml"
@@ -118,9 +118,9 @@ jobs:
       - run: flutter pub get
       - run: flutter build ${{ matrix.build_target }} -v --release ${{ matrix.build_options }}
 
-      - name: Build AAB
-        if: matrix.target == 'android'
-        run: flutter build appbundle -v --release --flavor=play
+      # - name: Build AAB
+      #   if: matrix.target == 'android'
+      #   run: flutter build appbundle -v --release --flavor=play
 
       # Package the build.
       - name: Copy VC redistributables to release directory for Windows
