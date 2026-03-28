@@ -41,6 +41,7 @@ int countAnyTraits(final Iterable<int> myTraits, final Iterable<int> requiredTra
       .length;
 }
 
+@Deprecated('Use `Individuality.checkSignedIndivPartialMatch class')
 bool checkSignedIndividualitiesPartialMatch({
   required final Iterable<int> myTraits,
   required final Iterable<int> requiredTraits,
@@ -56,6 +57,7 @@ bool checkSignedIndividualitiesPartialMatch({
   return !negativeMatchFunc(myTraits, negativeTargets);
 }
 
+@Deprecated('Use `Individuality.checkSignedIndividualities2/checkSignedIndivPartialMatch/checkSignedIndivAllMatch class')
 bool checkSignedIndividualities2({
   required final Iterable<int> myTraits,
   required final Iterable<int> requiredTraits,
@@ -70,6 +72,7 @@ bool checkSignedIndividualities2({
   );
 }
 
+@Deprecated('Use `Individuality.isPartialMatchArray class')
 bool partialMatch(final Iterable<int> myTraits, final Iterable<int> unsignedRequiredTraits) {
   final Set<int> myTraitsSet = myTraits.toSet();
   for (final trait in unsignedRequiredTraits) {
@@ -80,6 +83,7 @@ bool partialMatch(final Iterable<int> myTraits, final Iterable<int> unsignedRequ
   return false;
 }
 
+@Deprecated('Use `Individuality.isMatchArray class')
 bool allMatch(final Iterable<int> myTraits, final Iterable<int> unsignedRequiredTraits) {
   final Set<int> myTraitsSet = myTraits.toSet();
   for (final trait in unsignedRequiredTraits) {
