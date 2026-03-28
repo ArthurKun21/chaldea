@@ -953,7 +953,7 @@ class CraftEssence extends BasicCraftEssence {
       return CEObtain.valentine;
     } else if (flags.contains(SvtFlag.svtEquipManaExchange)) {
       if (rarity == 4 && skills.expand((e) => e.functions).any((func) => func.funcType == FuncType.eventDropRateUp)) {
-        return CEObtain.eventReward;
+        return CEObtain.drop;
       }
       // Grand Board quest reward ce
       if (const {9408540, 9408600, 9408650, 9408700, 9408710, 9408840, 9408920, 9408970, 9408980}.contains(id)) {
