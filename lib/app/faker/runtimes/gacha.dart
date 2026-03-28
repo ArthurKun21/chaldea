@@ -156,10 +156,10 @@ class FakerRuntimeGacha extends FakerRuntimeBase {
     }
   }
 
-  Future<void> sellServant() async {
+  Future<void> sellServant({int limitGetDay = 2}) async {
     List<UserServantEntity> sellUserSvts = [];
     List<UserCommandCodeEntity> sellCommandCodes = [];
-    final timeLimit = DateTime.now().timestamp - 3600 * 36;
+    final timeLimit = DateTime.now().timestamp - kSecsPerDay * limitGetDay;
     sellUserSvts.addAll(
       mstData.userSvt.where((userSvt) {
         final entity = db.gameData.entities[userSvt.svtId];

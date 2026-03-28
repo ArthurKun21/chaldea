@@ -209,7 +209,7 @@ class _FakeGrandOrderState extends State<FakeGrandOrder> {
     final userGame = mstData.user ?? agent.user.userGame;
     List<InlineSpan> subtitle = [TextSpan(text: userGame?.friendCode ?? '')];
     if (mstData.isLoggedIn) {
-      onTapPresentBox() => router.pushPage(UserPresentBoxManagePage(runtime: runtime));
+      void onTapPresentBox() => router.pushPage(UserPresentBoxManagePage(runtime: runtime));
       subtitle.addAll([
         TextSpan(text: '  '),
         CenterWidgetSpan(
@@ -229,8 +229,8 @@ class _FakeGrandOrderState extends State<FakeGrandOrder> {
       ]);
     }
 
-    if (runtime.agentData.loginResultData.isNotEmpty) {
-      onTapBonus() => router.pushPage(LoginResultPage(runtime: runtime));
+    if (runtime.agentData.loginResultHistory.isNotEmpty) {
+      void onTapBonus() => router.pushPage(LoginResultPage(runtime: runtime));
       subtitle.addAll([
         TextSpan(text: '  '),
         CenterWidgetSpan(
@@ -241,7 +241,9 @@ class _FakeGrandOrderState extends State<FakeGrandOrder> {
           ),
         ),
         TextSpan(
-          text: ' ${Maths.sum(runtime.agentData.loginResultData.getLists().map((e) => e.length))}',
+          text:
+              ' ${runtime.agentData.loginResultHistory.firstOrNull?.length}'
+              '(${Maths.sum(runtime.agentData.loginResultHistory.map((e) => e.length))})',
           recognizer: TapGestureRecognizer()..onTap = onTapBonus,
         ),
       ]);

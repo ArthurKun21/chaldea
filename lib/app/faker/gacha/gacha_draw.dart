@@ -816,11 +816,14 @@ class _GachaDrawPageState extends State<GachaDrawPage> with FakerRuntimeStateMix
               ),
         buildButton(
           onPressed: () {
-            SimpleConfirmDialog(
-              title: const Text('sell'),
-              onTapOk: () {
+            InputCancelOkDialog.number(
+              title: 'Sell Servants',
+              initValue: 2,
+              validate: (v) => v > 0,
+              helperText: 'Summoned in X days',
+              onSubmit: (value) {
                 runtime.runTask(() async {
-                  return runtime.gacha.sellServant();
+                  return runtime.gacha.sellServant(limitGetDay: value);
                 });
               },
             ).showDialog(context);

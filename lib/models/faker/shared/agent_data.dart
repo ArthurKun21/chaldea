@@ -9,7 +9,7 @@ class FakerAgentData {
   final mstData_ = MasterDataManager();
 
   // login result
-  final loginResultData = LoginResultData();
+  final loginResultHistory = <LoginResultData>[];
 
   LoginResultData? updateLoginResult(FateTopLogin resp) {
     LoginResultData? result;
@@ -20,7 +20,9 @@ class FakerAgentData {
         try {
           result = LoginResultData.fromJson(success);
           result.updateServerTime(resp.serverTime?.timestamp);
-          loginResultData.mergeLoginBonus(result);
+          if (result.isNotEmpty) {
+            loginResultHistory.insert(0, result);
+          }
         } catch (e) {
           logger.e('LoginResultData parse failed in nid [${response.nid}]');
         }

@@ -42,11 +42,13 @@ class FakerReminders extends StatelessWidget {
       [4, 5],
     ];
     for (final gacha in runtime.gameData.timerData.gachas.values) {
+      // TODO: gacha.releaseConditions;
       if (gacha.freeDrawFlag == 0 || gacha.openedAt > now || gacha.closedAt <= now) continue;
-      if (conflictGachaGroups.any((group) {
-        return group.contains(gacha.id) &&
-            group.any((gachaId) => gachaId != gacha.id && mstData.userGacha[gachaId] != null);
-      })) {
+      if (mstData.userGacha[gacha.id] == null &&
+          conflictGachaGroups.any((group) {
+            return group.contains(gacha.id) &&
+                group.any((gachaId) => gachaId != gacha.id && mstData.userGacha[gachaId] != null);
+          })) {
         continue;
       }
       int resetHourUTC;
@@ -56,6 +58,9 @@ class FakerReminders extends StatelessWidget {
         case GachaType.payGacha:
           resetHourUTC = runtime.region.storyFreeGachaResetUTC;
         default:
+          assert(() {
+            throw UnsupportedError('Unsupported GachaType: ${gacha.type}');
+          }());
           continue;
       }
       int? nextFreeDrawAt;
@@ -287,7 +292,7 @@ class FakerReminders extends StatelessWidget {
     // event quests
     for (final event in runtime.gameData.timerData.events.values) {
       if (event.startedAt > now || event.endedAt <= now) continue;
-      final hasMap = event.warIds.where((e) => db.gameData.wars[e]?.maps.isNotEmpty == true).isNotEmpty;
+      final hasMap = event.warIds.any((e) => db.gameData.wars[e]?.maps.isNotEmpty == true);
       if (hasMap && event.endedAt > now + 7 * kSecsPerDay) continue;
       Set<int> questIds = {...?db.gameData.others.eventQuestGroups[event.id]};
       for (final warId in event.warIds) {

@@ -3153,6 +3153,8 @@ class GachaInfos extends MstGiftBase {
 
 @JsonSerializable(createToJson: false, createFieldMap: true)
 class LoginResultData {
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  int serverTime = 0;
   // List<LoginMessageData> loginMessages;
   List<LoginBonusData> totalLoginBonus;
   List<LoginBonusData> seqLoginBonus;
@@ -3189,6 +3191,7 @@ class LoginResultData {
 
   void updateServerTime(int? t) {
     if (t != null && t > 0) {
+      serverTime = t;
       for (final bonusList in getLists()) {
         for (final bonus in bonusList) {
           bonus.createdAt = t;
@@ -3199,7 +3202,9 @@ class LoginResultData {
 
   bool get isEmpty => getLists().every((e) => e.isEmpty);
   bool get isNotEmpty => !isEmpty;
+  int get length => Maths.sum(getLists().map((e) => e.length));
 
+  @Deprecated('')
   void mergeLoginBonus(LoginResultData target) {
     totalLoginBonus = [...totalLoginBonus, ...target.totalLoginBonus];
     seqLoginBonus = [...seqLoginBonus, ...target.seqLoginBonus];

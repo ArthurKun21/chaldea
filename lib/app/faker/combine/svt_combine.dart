@@ -561,7 +561,7 @@ class _SvtCombinePageState extends State<SvtCombinePage> with FakerRuntimeStateM
                         if (startLv == null || startLv <= 0) return;
                         _SkillCombineMultiLevelDialog(
                           title: Text(
-                            '${S.current.append_skill_short} $skillNum - ${skill.dispName}',
+                            '${S.current.active_skill_short} $skillNum - ${skill.dispName}',
                             maxLines: 1,
                             overflow: .ellipsis,
                           ),
