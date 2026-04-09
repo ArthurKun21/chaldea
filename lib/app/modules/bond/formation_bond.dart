@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:chaldea/models/gamedata/individuality.dart' show Individuality;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:chaldea/app/api/atlas.dart';
@@ -9,6 +8,7 @@ import 'package:chaldea/app/app.dart';
 import 'package:chaldea/app/battle/models/user.dart';
 import 'package:chaldea/app/modules/common/builders.dart';
 import 'package:chaldea/generated/l10n.dart';
+import 'package:chaldea/models/gamedata/individuality.dart' show Individuality;
 import 'package:chaldea/models/models.dart';
 import 'package:chaldea/utils/utils.dart';
 import 'package:chaldea/widgets/widgets.dart';
