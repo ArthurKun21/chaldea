@@ -821,6 +821,7 @@ class _GachaDrawPageState extends State<GachaDrawPage> with FakerRuntimeStateMix
               initValue: 2,
               validate: (v) => v > 0,
               helperText: 'Summoned in X days',
+              autofocus: false,
               onSubmit: (value) {
                 runtime.runTask(() async {
                   return runtime.gacha.sellServant(limitGetDay: value);

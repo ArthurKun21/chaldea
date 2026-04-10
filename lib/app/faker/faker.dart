@@ -2082,7 +2082,7 @@ class _FakeGrandOrderState extends State<FakeGrandOrder> {
               },
             ).showDialog(context);
           },
-          text: 'Loop ×${battleOption.loopCount}',
+          text: [if (battleOption.useCampaignItem) '🫖', 'Loop ×${battleOption.loopCount}'].join(''),
         ),
         buildButton(
           onPressed: () {

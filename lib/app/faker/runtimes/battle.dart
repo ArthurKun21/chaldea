@@ -292,6 +292,12 @@ class FakerRuntimeBattle extends FakerRuntimeBase {
 
     int campaignItemId = 0;
     if (options.useCampaignItem) {
+      if (questPhaseEntity.bond < 1000) {
+        throw SilentException('Do not waste Teapot on low bond(${questPhaseEntity.bond}) quest');
+      }
+      if (questPhaseEntity.flags.contains(QuestFlag.dropFirstTimeOnly) && userQuest != null && userQuest.clearNum > 0) {
+        throw SilentException('Do not waste Teapot on cleared quest with dropFirstTimeOnly flag');
+      }
       // should check campaign time rather item endedAt
       List<(UserItemEntity, Item)> campaignItems = [];
       final now = DateTime.now().timestamp;
@@ -371,7 +377,16 @@ class FakerRuntimeBattle extends FakerRuntimeBase {
         followerType = 0;
         followerSupportDeckId = 0;
       } else {
-        final npc = questPhaseEntity.supportServants.firstWhereOrNull((e) => e.script?.eventDeckIndex == null);
+        SupportServant? npc;
+        if (options.npcSupportId != 0) {
+          npc = questPhaseEntity.supportServants.firstWhereOrNull(
+            (e) => e.script?.eventDeckIndex == null && e.id == options.npcSupportId,
+          );
+          if (npc == null) {
+            throw SilentException('npc ${options.npcSupportId} not found');
+          }
+        }
+        npc ??= questPhaseEntity.supportServants.firstWhereOrNull((e) => e.script?.eventDeckIndex == null);
         followerId = npc?.id ?? 0;
         followerClassId = 0;
         followerType = (npc == null ? FollowerType.none : FollowerType.npc).value;
@@ -415,7 +430,7 @@ class FakerRuntimeBattle extends FakerRuntimeBase {
       followerGrandGraphId = followerSvt.grandGraphId;
     }
 
-    return agent.battleSetup(
+    final resp = await agent.battleSetup(
       questId: options.questId,
       questPhase: options.questPhase,
       activeDeckId: activeDeckId,
@@ -429,6 +444,11 @@ class FakerRuntimeBattle extends FakerRuntimeBase {
       campaignItemId: campaignItemId,
       userEquipId: userEquipId,
     );
+    // reset npcSupportId if not using support npc
+    if (options.npcSupportId != 0 && options.npcSupportId != followerId) {
+      options.npcSupportId = 0;
+    }
+    return resp;
   }
 
   Future<(FollowerInfo follower, ServantLeaderInfo followerSvt)> _getValidSupport({

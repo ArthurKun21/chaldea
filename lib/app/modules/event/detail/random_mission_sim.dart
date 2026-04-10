@@ -8,13 +8,15 @@ import 'package:chaldea/app/api/atlas.dart';
 import 'package:chaldea/app/app.dart';
 import 'package:chaldea/app/modules/master_mission/solver/scheme.dart';
 import 'package:chaldea/app/modules/master_mission/solver/solver.dart';
+import 'package:chaldea/app/modules/quest/quest_list.dart';
+import 'package:chaldea/generated/l10n.dart';
 import 'package:chaldea/models/models.dart';
 import 'package:chaldea/packages/logger.dart';
 import 'package:chaldea/utils/utils.dart';
 import 'package:chaldea/widgets/simple_accordion.dart';
 
 const int kMaxMissionCount = 20;
-const int kAppleAp = 147;
+const int kAppleAp = 146;
 
 /// 假设：
 ///   - 无活动素材加成
@@ -35,8 +37,15 @@ class _RandomMissionSimulationPageState extends State<RandomMissionSimulationPag
   final Map<int, EventMission> eventMissions = {};
   final Map<int, (int type, List<int> targetIds, int count)> missionConds = {};
   late final allQuests = db.gameData.wars[event.warIds.firstOrNull]?.quests ?? [];
-  // late final _cqs = allQuests.where((e) => e.consume == 5 && e.afterClear == QuestAfterClearType.repeatLast).toList();
-  late final _cqs = [db.gameData.quests[94064001]!];
+  late final _cqs = allQuests
+      .where(
+        (e) =>
+            e.consume == 5 &&
+            e.afterClear == QuestAfterClearType.repeatLast &&
+            e.flags.contains(QuestFlag.dropFirstTimeOnly),
+      )
+      .toList();
+  // late final _cqs = [db.gameData.quests[94064001]!];
   late final _fqs = allQuests.where((e) => e.isAnyFree && e.consume > 0).toList();
 
   // late final eventMissions = {for (final mission in event.missions) mission.id: mission};
@@ -76,8 +85,9 @@ class _RandomMissionSimulationPageState extends State<RandomMissionSimulationPag
               }
               try {
                 _running = true;
+                history.clear();
 
-                for (final x in range(3, 10)) {
+                for (final x in range(1, 10)) {
                   // for (final x in range(1, 11)) {
                   for (final y in range(2, 3)) {
                     if (_stopFlag) {
@@ -89,12 +99,13 @@ class _RandomMissionSimulationPageState extends State<RandomMissionSimulationPag
                     await _startSimulation(data);
                     history.sort2((data) {
                       return -Maths.sum(
-                        data.giftItems.entries.where((e) => data.getScore(e.key) >= 2).map((e) => e.value),
+                        data.giftItems.entries.where((e) => data.getScore(e.key) >= 1).map((e) => e.value),
                       );
                     });
                     if (mounted) setState(() {});
                   }
                 }
+                history.insert(1, history.removeLast());
               } catch (e, s) {
                 logger.e('random mission monte carlo failed', e, s);
                 EasyLoading.showError(e.toString());
@@ -130,9 +141,27 @@ class _RandomMissionSimulationPageState extends State<RandomMissionSimulationPag
         ],
       ),
       body: ListView.builder(
-        itemCount: history.length,
+        itemCount: history.length + 1,
         itemBuilder: (context, index) {
-          final data = history[index];
+          if (index == 0) {
+            return Column(
+              mainAxisSize: .min,
+              children: [
+                for (final (title, quests) in [(S.current.high_difficulty_quest, _cqs), (S.current.free_quest, _fqs)])
+                  ListTile(
+                    dense: true,
+                    title: Text('${quests.length} $title'),
+                    subtitle: Text(quests.reversed.take(3).map((e) => e.lName.l.setMaxLines(1)).join(' / ')),
+                    trailing: Icon(DirectionalIcons.keyboard_arrow_forward(context)),
+                    onTap: () {
+                      router.pushPage(QuestListPage(quests: quests, title: title));
+                    },
+                  ),
+                kDefaultDivider,
+              ],
+            );
+          }
+          final data = history[index - 1];
           return SimpleAccordion(
             expanded: true,
             headerBuilder: (context, _) {

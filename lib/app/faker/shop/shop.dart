@@ -150,18 +150,25 @@ class _UserShopsPageState extends State<UserShopsPage> with SingleTickerProvider
         crossAxisAlignment: WrapCrossAlignment.center,
         spacing: 8,
         children: [
-          Text.rich(
-            TextSpan(
-              text: [userShop?.num ?? 0, shop.limitNum == 0 ? '∞' : shop.limitNum].join('/'),
-              children: [
-                if (shop.purchaseType == PurchaseType.item && shop.targetIds.length == 1)
-                  TextSpan(
-                    text: '\n${S.current.item_own} ${mstData.getItemOrSvtNum(shop.targetIds.single).format()}',
-                    style: canBuy ? Theme.of(context).textTheme.bodySmall : null,
-                  ),
-              ],
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text.rich(
+              TextSpan(
+                text: [userShop?.num ?? 0, shop.limitNum == 0 ? '∞' : shop.limitNum].join('/'),
+                children: [
+                  if (shop.purchaseType == PurchaseType.item && shop.targetIds.length == 1)
+                    TextSpan(
+                      text: [
+                        '\n${S.current.item_own} ${mstData.getItemOrSvtNum(shop.targetIds.single).format()}',
+                        if (mstData.isCurPlanUser)
+                          '${S.current.item_left} ${(db.itemCenter.itemLeft[shop.targetIds.single] ?? 0).format()}',
+                      ].join('\n'),
+                      style: canBuy ? Theme.of(context).textTheme.bodySmall : null,
+                    ),
+                ],
+              ),
+              textAlign: TextAlign.end,
             ),
-            textAlign: TextAlign.end,
           ),
           OutlinedButton(
             onPressed: canBuy ? () => buyShop(shop) : null,

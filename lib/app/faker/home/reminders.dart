@@ -271,13 +271,21 @@ class FakerReminders extends StatelessWidget {
           continue;
         }
         if (_shownInterludes.contains(quest.id)) continue;
+        if (interludeSvt != null && mstData.userSvtCollection[interludeSvt.id]?.isOwned == true) continue;
         _shownInterludes.add(quest.id);
         _shownQuestIds.add(quest.id);
         yield ListTile(
           dense: true,
           leading: interludeSvt?.iconBuilder(context: context),
           title: Text('[${S.current.interlude}] ${quest.lName.l}', maxLines: 1, overflow: TextOverflow.ellipsis),
-          subtitle: Text('${quest.id}: phase ${userQuest?.questPhase ?? "-"} clear ${userQuest?.clearNum ?? "-"}'),
+          subtitle: Text(
+            [
+              if (interludeSvt != null && mstData.isSvtOwned(interludeSvt.id)) kStarChar2,
+              '${release.endedAt.sec2date().toCustomString(year: false, second: false)}:',
+              'phase ${userQuest?.questPhase ?? "-"}',
+              'clear ${userQuest?.clearNum ?? "-"}',
+            ].join(' '),
+          ),
           trailing: IconButton(
             onPressed: () {
               copyToClipboard(quest.id.toString(), toast: true);

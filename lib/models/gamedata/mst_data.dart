@@ -192,6 +192,7 @@ class MasterDataManager extends MasterDataManagerBase {
 
   Iterable<UserServantEntity> get userSvtAndStorage => userSvt.followedBy(userSvtStorage);
   UserServantEntity? getUserSvt(int userSvtId) => userSvt[userSvtId] ?? userSvtStorage[userSvtId];
+  bool isSvtOwned(int svtId) => userSvtCollection[svtId]?.isOwned == true;
 
   MagusGrade? get magusGrade {
     if (isQuestClear(4000709)) {

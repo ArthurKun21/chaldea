@@ -505,7 +505,7 @@ class _EquipBondBonusTabState extends State<EquipBondBonusTab> {
                 selected: ce == null ? false : curStatus != _FilterType.none,
                 value: ce?.ce.id,
                 shrinkWrap: true,
-                constraints: BoxConstraints(),
+                constraints: const BoxConstraints(),
                 selectedColor: curStatus.color,
                 child:
                     ce?.ce.iconBuilder(context: context, jumpToDetail: false, height: 36, padding: EdgeInsets.all(3)) ??
