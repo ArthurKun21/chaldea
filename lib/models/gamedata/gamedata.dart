@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:archive/archive.dart';
 
+import 'package:chaldea/utils/basic.dart';
 import 'package:chaldea/utils/constants.dart';
 import 'package:chaldea/utils/extension.dart';
 import '../db.dart' show ConstData;
@@ -620,6 +621,7 @@ class AssetBundleDecrypt {
 
 class _ProcessedData {
   final GameData gameData;
+  Map<int, ({CraftEssence ce, List<List<int>> traits, int rateCount})> bondBonusCes = {};
 
   Map<int, EnemyMasterBattle> enemyMasterBattles = {};
   Map<int, EventMission> eventMissions = {};
@@ -650,6 +652,17 @@ class _ProcessedData {
   Map<String, List<NiceGacha>> gachaGroups = {};
 
   _ProcessedData(this.gameData) {
+    for (final ce in gameData.craftEssencesById.values) {
+      final bondBonusData = ce.getBondBonusData();
+      if (bondBonusData != null) {
+        bondBonusCes[ce.id] = (ce: ce, traits: bondBonusData.traits, rateCount: bondBonusData.rateCount);
+      }
+    }
+    bondBonusCes = sortDict(
+      bondBonusCes,
+      compare: (a, b) => b.value.ce.collectionNo.compareTo(a.value.ce.collectionNo),
+    );
+
     for (final svt in gameData.servants.values) {
       for (final costume in svt.profile.costume.values) {
         costumeSvtMap[costume.battleCharaId] = svt;

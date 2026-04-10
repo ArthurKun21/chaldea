@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:chaldea/generated/l10n.dart';
 import 'package:chaldea/models/gamedata/effect.dart';
+import 'package:chaldea/models/gamedata/individuality.dart';
 import 'package:chaldea/models/models.dart';
 import 'package:chaldea/utils/utils.dart';
 import 'package:chaldea/widgets/widgets.dart';
@@ -172,6 +173,24 @@ class ServantFilterPage extends FilterPage<SvtFilterData> {
 
     if (!filterData.trait.matchAny(traits)) {
       return false;
+    }
+    if (filterData.bondBonusCeIds.isNotEmpty) {
+      final limits = {...range(5), ...svt.costume.keys, ...svt.ascensionAdd.individuality2.all.keys};
+
+      bool _checkCe(List<int> selfTraits, int ceId) {
+        final bonusData = db.gameData.others.bondBonusCes[ceId];
+        if (bonusData == null) return false;
+        return Individuality.checkSignedMultiIndividuality(selfArray: selfTraits, signedTargetsArray: bonusData.traits);
+      }
+
+      if (!limits.any((limitCount) {
+        final traits = svt.getIndividuality(eventId, limitCount);
+        return (filterData.bondBonusCeIds.matchAll
+            ? filterData.bondBonusCeIds.options.every
+            : filterData.bondBonusCeIds.options.any)((ceId) => _checkCe(traits, ceId));
+      })) {
+        return false;
+      }
     }
     if (filterData.effectType.isNotEmpty || filterData.targetTrait.isNotEmpty || filterData.effectTarget.isNotEmpty) {
       List<BaseFunction> funcs = [
@@ -477,6 +496,26 @@ class _ServantFilterPageState extends FilterPageState<SvtFilterData, ServantFilt
             ),
           ],
           buildGroupDivider(text: S.current.gamedata),
+
+          FilterGroup<int>(
+            title: Text(S.current.bond_bonus, style: textStyle),
+            options: db.gameData.others.bondBonusCes.keys.toList(),
+            showMatchAll: true,
+            values: filterData.bondBonusCeIds,
+            constraints: const BoxConstraints(),
+            shrinkWrap: true,
+            optionBuilder: (v) =>
+                db.gameData.craftEssencesById[v]?.iconBuilder(
+                  context: context,
+                  jumpToDetail: false,
+                  height: 36,
+                  padding: EdgeInsets.all(3),
+                ) ??
+                Text(v.toString()),
+            onFilterChanged: (value, _) {
+              update();
+            },
+          ),
           FilterGroup<Region>(
             title: Text(S.current.game_server, style: textStyle),
             options: Region.values,

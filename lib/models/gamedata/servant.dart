@@ -669,7 +669,7 @@ class Servant extends BasicServant {
   }) {
     final entries = attri(ascensionAdd);
     T? _checkList(T? x) {
-      if (x != null && x is List && x.isEmpty) return null;
+      if (x != null && x is List && ignoreEmptyList && x.isEmpty) return null;
       return x;
     }
 
@@ -941,6 +941,26 @@ class CraftEssence extends BasicCraftEssence {
       db.gameData.wiki.craftEssences[collectionNo] ??= CraftEssenceExtra(collectionNo: collectionNo);
 
   bool get isRegionSpecific => collectionNo > 100000 && (sortId ?? collectionNo) < 0;
+
+  ({List<List<int>> traits, int rateCount})? getBondBonusData() {
+    if (collectionNo <= 0 || isRegionSpecific) return null;
+    List<NiceSkill> _skills;
+    if (rarity < 5) return null;
+    _skills = getActivatedSkills(true)[1] ?? <NiceSkill>[];
+    if (_skills.isEmpty) return null;
+    if (_skills.length > 1) return null;
+    final results = [
+      for (final skill in _skills)
+        for (final func in skill.functions)
+          if (func.funcType == FuncType.servantFriendshipUp &&
+              (func.svals.firstOrNull?.EventId ?? 0) == 0 &&
+              (func.functvals.isNotEmpty || func.overWriteTvalsList.isNotEmpty))
+            (rateCount: func.svals.firstOrNull?.RateCount ?? 0, traits: func.getResultTvalsList()),
+    ];
+    if (results.isEmpty) return null;
+    results.sort2((e) => e.rateCount);
+    return results.last;
+  }
 
   CEObtain get obtain {
     // DO NOT change if-else order

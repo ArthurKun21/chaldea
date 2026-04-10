@@ -27,7 +27,11 @@ class CraftFilterPage extends FilterPage<CraftFilterData> {
         return false;
       }
     }
-    if (!filterData.obtain.matchAny([ce.obtain, if (ce.isRegionSpecific) CEObtain.regionSpecific])) {
+    if (!filterData.obtain.matchAny([
+      ce.obtain,
+      if (ce.isRegionSpecific) CEObtain.regionSpecific,
+      if (ce.getBondBonusData() != null) CEObtain.davinciBondBonus,
+    ])) {
       return false;
     }
     if (!filterData.atkType.matchOne(ce.atkType)) {
@@ -130,7 +134,7 @@ class _CraftFilterPageState extends FilterPageState<CraftFilterData, CraftFilter
           ),
           FilterGroup<CEObtain>(
             title: Text(S.current.filter_category),
-            options: CEObtain.values,
+            options: {CEObtain.davinciBondBonus, ...CEObtain.values}.toList(),
             values: filterData.obtain,
             optionBuilder: (v) => Text(Transl.ceObtain(v).l),
             onFilterChanged: (value, _) {
