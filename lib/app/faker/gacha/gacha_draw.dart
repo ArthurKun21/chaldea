@@ -136,6 +136,9 @@ class _GachaDrawPageState extends State<GachaDrawPage> with FakerRuntimeStateMix
 
   Widget get body {
     final gacha = _cachedGachas[gachaOption.gachaId];
+    final int resultSubId = gachaOption.gachaSubId < 0
+        ? (gacha == null ? 0 : runtime.gacha.getTargetGachaSubId(gacha))
+        : gachaOption.gachaSubId;
     return ListView(
       children: [
         ListTile(
@@ -212,7 +215,7 @@ class _GachaDrawPageState extends State<GachaDrawPage> with FakerRuntimeStateMix
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(gachaOption.gachaSubId.toString()),
+              Text([gachaOption.gachaSubId, gacha == null ? '-' : runtime.gacha.getTargetGachaSubId(gacha)].join('→')),
               IconButton(
                 onPressed: gacha == null
                     ? null
@@ -223,7 +226,11 @@ class _GachaDrawPageState extends State<GachaDrawPage> with FakerRuntimeStateMix
                           gacha: gacha,
                           onSelected: (sub) {
                             runtime.lockTask(() {
-                              gachaOption.gachaSubs[gachaOption.gachaId] = sub?.id ?? 0;
+                              if (sub != null) {
+                                gachaOption.gachaSubs[gachaOption.gachaId] = sub.id;
+                              } else {
+                                gachaOption.gachaSubs.remove(gachaOption.gachaId);
+                              }
                             });
                           },
                         ),
@@ -233,7 +240,7 @@ class _GachaDrawPageState extends State<GachaDrawPage> with FakerRuntimeStateMix
             ],
           ),
         ),
-        if (gacha != null) GachaBanner(region: runtime.region, imageId: gacha.getImageId(gachaOption.gachaSubId)),
+        if (gacha != null) GachaBanner(region: runtime.region, imageId: gacha.getImageId(resultSubId)),
         SwitchListTile.adaptive(
           dense: true,
           title: Text('100连抽'),

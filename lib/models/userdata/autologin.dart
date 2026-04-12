@@ -491,8 +491,8 @@ enum BattleWinResultType {
 class GachaOption {
   // gacha
   int gachaId;
-  Map<int, int> gachaSubs; // <gachaId, subId>
-  int get gachaSubId => gachaSubs[gachaId] ?? 0;
+  Map<int, int> gachaSubs; // <gachaId, subId>, default -1 means auto
+  int get gachaSubId => gachaSubs[gachaId] ?? -1;
   int loopCount;
   bool hundredDraw;
   // enhance
