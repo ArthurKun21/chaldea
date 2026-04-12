@@ -127,8 +127,8 @@ class CheckTraitParameters {
   Iterable<int> requiredTraits;
   BattleServantData? actor;
   int? requireAtLeast; // overshadows positive & negative match
-  bool Function(Iterable<int>, Iterable<int>) positiveMatchFunction;
-  bool Function(Iterable<int>, Iterable<int>) negativeMatchFunction;
+  bool Function(List<int>?, List<int>?) positiveMatchFunction;
+  bool Function(List<int>?, List<int>?) negativeMatchFunction;
 
   bool checkActorTraits;
   bool checkActorBuffTraits;
@@ -153,7 +153,7 @@ class CheckTraitParameters {
     this.checkCurrentCardTraits = false,
     this.checkCurrentFuncTraits = false,
     this.checkQuestTraits = false,
-    this.positiveMatchFunction = partialMatch,
-    this.negativeMatchFunction = partialMatch,
+    this.positiveMatchFunction = Individuality.isPartialMatchArray,
+    this.negativeMatchFunction = Individuality.isPartialMatchArray,
   }) : requiredTraits = requiredTraits.toList();
 }
