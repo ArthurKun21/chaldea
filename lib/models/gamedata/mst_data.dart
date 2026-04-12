@@ -52,6 +52,15 @@ class FateTopLogin {
     throw Exception('response nid="$nid" not found: ${responses.map((e) => "[${e.nid}] ${e.resCode}").join(" ")}');
   }
 
+  T? parseResponse<T>(String nid, T Function(Map<String, dynamic>) fromJson) {
+    try {
+      return fromJson(Map<String, dynamic>.from(getResponse(nid).success!));
+    } catch (e, s) {
+      logger.d('parse response "$nid" failed', e, s);
+      return null;
+    }
+  }
+
   FateResponseDetail? getResponseNull(String nid) {
     for (final resp in responses) {
       if (resp.nid == nid) return resp;

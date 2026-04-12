@@ -1650,6 +1650,19 @@ class _FakeGrandOrderState extends State<FakeGrandOrder> with FakerRuntimeStateM
           },
           controlAffinity: ListTileControlAffinity.trailing,
         ),
+        CheckboxListTile.adaptive(
+          dense: true,
+          value: battleOption.sendFriendRequest,
+          title: const Text("Send Friend Request"),
+          onChanged: (v) {
+            runtime.lockTask(() {
+              setState(() {
+                battleOption.sendFriendRequest = v!;
+              });
+            });
+          },
+          controlAffinity: ListTileControlAffinity.trailing,
+        ),
         ListTile(
           dense: true,
           title: const Text('Battle Duration(seconds)'),

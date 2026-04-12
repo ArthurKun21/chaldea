@@ -107,6 +107,19 @@ class FakerAgentJP extends FakerAgent<FRequestJP, AutoLoginDataJP, NetworkManage
   }
 
   @override
+  Future<FResponse> friendTop() {
+    final request = FRequestJP(network: network, path: '/friend/top');
+    return request.beginRequestAndCheckError('friend_top');
+  }
+
+  @override
+  Future<FResponse> friendOffer({required int64_t targetUserId}) {
+    final request = FRequestJP(network: network, path: '/friend/offer');
+    request.addFieldInt64('targetUserId', targetUserId);
+    return request.beginRequestAndCheckError('friend_offer');
+  }
+
+  @override
   Future<FResponse> itemRecover({required int32_t recoverId, required int32_t num}) async {
     final request = FRequestJP(network: network, path: '/item/recover');
     request.addFieldInt32('recoverId', recoverId);

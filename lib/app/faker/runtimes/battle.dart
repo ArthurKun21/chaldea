@@ -655,7 +655,7 @@ class FakerRuntimeBattle extends FakerRuntimeBase {
         );
       }
 
-      return agent.battleResult(
+      final resp = await agent.battleResult(
         battleId: battleEntity.id,
         resultType: BattleResultType.win,
         winResult: BattleWinResultType.normal,
@@ -672,9 +672,38 @@ class FakerRuntimeBattle extends FakerRuntimeBase {
         skillShiftNpcSvtIdArray: itemDroppedSkillShiftEnemies.map((e) => e.npcId).toList(),
         sendDelay: sendDelay,
       );
+
+      if (options.sendFriendRequest) {
+        await _offerFriend(resp);
+      }
+
+      return resp;
     } else {
       throw Exception('resultType=$resultType not supported');
     }
+  }
+
+  final Set<int> _sentFriendRequestIds = {};
+  Future<void> _offerFriend(FResponse battleResultResp) async {
+    BattleResultData? battleResultData = battleResultResp.data.parseResponse(
+      'battle_result',
+      BattleResultData.fromJson,
+    );
+    if (battleResultData == null) return;
+    if (battleResultData.followerType != FollowerType.notFriend.value) return;
+    if (battleResultData.followerId <= 10000) return;
+
+    if (mstData.tblFriend.where((e) => e.status2 == .friend).length >= mstData.user!.friendKeep) return;
+
+    final friendId = battleResultData.followerId;
+    final friend1 = mstData.tblFriend[TblFriendEntity.createPK(mstData.user!.userId, friendId)];
+    if (friend1 != null && const [FriendStatus.friend, FriendStatus.offer].contains(friend1.status2)) return;
+    final friend2 = mstData.tblFriend[TblFriendEntity.createPK(friendId, mstData.user!.userId)];
+    if (friend2 != null && const [FriendStatus.friend, FriendStatus.offered].contains(friend2.status2)) return;
+
+    if (_sentFriendRequestIds.contains(friendId)) return;
+    await agent.friendOffer(targetUserId: friendId);
+    _sentFriendRequestIds.add(friendId);
   }
 
   Future<void> _checkQuestCondition(QuestPhase questPhase, bool checkCond) async {

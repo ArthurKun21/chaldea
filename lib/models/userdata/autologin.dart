@@ -347,6 +347,7 @@ class AutoBattleOptions {
   bool customAliveUniqueId;
   bool enableSkillShift;
   List<int> skillShiftEnemyUniqueIds;
+  bool sendFriendRequest;
 
   // loop
   List<int> recoverIds;
@@ -382,6 +383,7 @@ class AutoBattleOptions {
     this.customAliveUniqueId = false,
     this.enableSkillShift = true,
     List<int>? skillShiftEnemyUniqueIds,
+    this.sendFriendRequest = false,
     List<int>? recoverIds,
     this.loopCount = 0,
     Map<int, int>? targetDrops,

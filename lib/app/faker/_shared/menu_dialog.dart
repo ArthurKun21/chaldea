@@ -14,6 +14,7 @@ import '../combine/svt_equip_combine.dart';
 import '../event/box_gacha.dart';
 import '../event/random_mission_loop.dart';
 import '../event/trade.dart';
+import '../friend/friend_list.dart';
 import '../gacha/gacha_draw.dart';
 import '../mission/mission_receive.dart';
 import '../runtime.dart';
@@ -157,6 +158,14 @@ class _FakerMenuDialogState extends State<FakerMenuDialog> with FakerRuntimeStat
           buildGroup(
             title: S.current.event,
             buttons: [
+              _ButtonData(
+                icon: Icons.diversity_3,
+                name: 'Friends',
+                enabled: isLoggedIn,
+                onTap: () {
+                  router.pushPage(FriendListPage(runtime: runtime));
+                },
+              ),
               _ButtonData(
                 icon: Icons.shop,
                 name: S.current.shop,

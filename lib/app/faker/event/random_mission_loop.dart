@@ -575,7 +575,7 @@ class _RandomMissionLoopPageState extends State<RandomMissionLoopPage> with Fake
                       style: reachBondLimit ? TextStyle(color: Theme.of(context).colorScheme.error) : null,
                     ),
                     BondProgress(
-                      value: bondData.next,
+                      value: bondData.elapsed,
                       total: bondData.total,
                       padding: EdgeInsets.symmetric(horizontal: 4),
                       minHeight: 4,
