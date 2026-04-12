@@ -77,7 +77,8 @@ class _SelectUserSvtEquipPageState extends State<SelectUserSvtEquipPage> {
       event: null,
       ceIds: {
         for (final ce in db.gameData.craftEssencesById.values)
-          if (ce.flags.contains(SvtFlag.svtEquipManaExchange) && ce.collectionNo > 0)
+          if ((ce.flags.contains(SvtFlag.svtEquipManaExchange) || ce.flags.contains(SvtFlag.svtEquipCampaign)) &&
+              ce.collectionNo > 0)
             for (final skill in ce.skills)
               for (final func in skill.functions)
                 if (func.funcType == .servantFriendshipUp) ce.id,

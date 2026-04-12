@@ -746,21 +746,11 @@ class _GachaDrawPageState extends State<GachaDrawPage> with FakerRuntimeStateMix
   Widget get buttonBar {
     final gacha = _cachedGachas[gachaOption.gachaId];
 
-    final buttonStyle = FilledButton.styleFrom(
-      minimumSize: const Size(64, 32),
-      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-    );
-
-    FilledButton buildButton({bool enabled = true, required VoidCallback? onPressed, required String text}) {
-      return FilledButton.tonal(onPressed: enabled ? onPressed : null, style: buttonStyle, child: Text(text));
-    }
-
     final hasFreeDraw = gacha != null && runtime.gacha.checkHasFreeGachaDraw(gacha);
     List<List<Widget>> btnGroups = [
       [
         gacha != null && gacha.type == GachaType.payGacha.value
-            ? buildButton(
+            ? buildCompactButton(
                 onPressed: hasFreeDraw
                     ? () async {
                         final confirm = await SimpleConfirmDialog(
@@ -775,7 +765,7 @@ class _GachaDrawPageState extends State<GachaDrawPage> with FakerRuntimeStateMix
                     : null,
                 text: 'Free Draw',
               )
-            : buildButton(
+            : buildCompactButton(
                 onPressed: () {
                   router.showDialog(
                     builder: (context) {
@@ -814,7 +804,7 @@ class _GachaDrawPageState extends State<GachaDrawPage> with FakerRuntimeStateMix
                 },
                 text: hasFreeDraw ? 'Free Draw' : 'draw',
               ),
-        buildButton(
+        buildCompactButton(
           onPressed: () {
             InputCancelOkDialog.number(
               title: 'Sell Servants',
@@ -831,7 +821,7 @@ class _GachaDrawPageState extends State<GachaDrawPage> with FakerRuntimeStateMix
           },
           text: 'sell',
         ),
-        buildButton(
+        buildCompactButton(
           onPressed: () {
             router.showDialog(
               builder: (context) {
@@ -871,7 +861,7 @@ class _GachaDrawPageState extends State<GachaDrawPage> with FakerRuntimeStateMix
         ),
       ],
       [
-        buildButton(
+        buildCompactButton(
           enabled: agent.user.gacha.loopCount > 0,
           onPressed: () {
             SimpleConfirmDialog(
@@ -883,7 +873,7 @@ class _GachaDrawPageState extends State<GachaDrawPage> with FakerRuntimeStateMix
           },
           text: 'Loop',
         ),
-        buildButton(
+        buildCompactButton(
           onPressed: () {
             agent.network.stopFlag = true;
           },

@@ -708,21 +708,10 @@ class _SvtCombinePageState extends State<SvtCombinePage> with FakerRuntimeStateM
   }
 
   Widget get buttonBar {
-    final buttonStyle = FilledButton.styleFrom(
-      minimumSize: const Size(64, 32),
-      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-    );
-
-    FilledButton buildButton({bool enabled = true, required VoidCallback onPressed, required String text}) {
-      return FilledButton.tonal(onPressed: enabled ? onPressed : null, style: buttonStyle, child: Text(text));
-    }
-
     List<List<Widget>> btnGroups = [
       [
         runtime.buildCircularProgress(context: context, padding: EdgeInsets.symmetric(horizontal: 8)),
-
-        buildButton(
+        buildCompactButton(
           onPressed: () {
             agent.network.stopFlag = true;
           },
