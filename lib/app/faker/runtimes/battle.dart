@@ -42,6 +42,23 @@ class FakerRuntimeBattle extends FakerRuntimeBase {
     if (questPhaseEntity == null) {
       throw SilentException('quest not found');
     }
+    final userQuest = mstData.userQuest[battleOption.questId];
+    if (questPhaseEntity.flags.contains(QuestFlag.dropFirstTimeOnly) &&
+        userQuest != null &&
+        userQuest.clearNum > 0 &&
+        battleOption.loopCount > 1) {
+      final confirm = await runtime.showLocalDialog(
+        SimpleConfirmDialog(
+          title: Text('No Drop! Looping ×${battleOption.loopCount}'),
+          content: Text(
+            questPhaseEntity.messages.isEmpty ? '' : questPhaseEntity.messages.map((e) => e.message).join("\n"),
+          ),
+        ),
+      );
+      if (confirm != true) {
+        throw SilentException('Do not loop dropFirstTimeOnly quests');
+      }
+    }
     if (battleOption.loopCount > 1 &&
         !(questPhaseEntity.afterClear == QuestAfterClearType.repeatLast &&
             battleOption.questPhase == questPhaseEntity.phases.lastOrNull)) {

@@ -243,7 +243,7 @@ class _RandomMissionLoopPageState extends State<RandomMissionLoopPage> with Fake
           ],
         ),
       ),
-      kDefaultDivider,
+      // kIndentDivider,
       SimpleAccordion(
         headerBuilder: (context, _) {
           final missionCount = Maths.sum(
@@ -289,40 +289,80 @@ class _RandomMissionLoopPageState extends State<RandomMissionLoopPage> with Fake
           dense: true,
           title: Text(questText),
           subtitle: team == null ? null : Text('clear ${userQuest?.clearNum}  challenge ${userQuest?.challengeNum}'),
-          trailing: Icon(Icons.change_circle),
-          onTap: () async {
-            if (runtime.runningTask.value) return;
-            await router.pushPage(
-              BattleOptionListPage(
-                data: user,
-                onSelected: (result) {
-                  onChanged(result.index);
-                },
-              ),
-            );
-            if (mounted) setState(() {});
-          },
+          trailing: IconButton(
+            onPressed: () async {
+              if (runtime.runningTask.value) return;
+              await router.pushPage(
+                BattleOptionListPage(
+                  data: user,
+                  onSelected: (result) {
+                    onChanged(result.index);
+                  },
+                ),
+              );
+              if (mounted) setState(() {});
+            },
+            icon: Icon(Icons.change_circle),
+          ),
+          onTap: quest?.routeTo,
         ),
         if (userDeck != null) ..._buildUserDeck(userDeck.deckInfo, showBond),
-        Center(
-          child: FilledButton(
-            onPressed: () {
-              SimpleConfirmDialog(
-                title: Text(S.current.start),
-                content: Text(questText),
-                onTapOk: () {
-                  runtime.runTask(() async {
-                    agent.user.curBattleOptionIndex = index;
-                    final battleOption = agent.user.curBattleOption;
-                    battleOption.loopCount = 1;
-                    await runtime.battle.startLoop();
-                  });
-                },
-              ).showDialog(context);
-            },
-            child: Text(S.current.start),
+        if (team != null)
+          ListTile(
+            subtitle: Column(
+              mainAxisSize: .min,
+              crossAxisAlignment: .start,
+              children: [
+                Wrap(
+                  crossAxisAlignment: .center,
+                  children: [
+                    Text('${S.current.support_servant_short}: '),
+                    if (team.supportSvtIds.isEmpty) Text(S.current.general_any),
+                    for (final svtId in team.supportSvtIds)
+                      GameCardMixin.anyCardItemBuilder(context: context, id: svtId, width: 24),
+                    //   ],
+                    // ),
+                    // Wrap(
+                    //   crossAxisAlignment: .center,
+                    //   children: [
+                    Text('  ${S.current.craft_essence_short}: '),
+                    if (team.supportEquipIds.isEmpty) Text(S.current.general_any),
+                    for (final ceId in team.supportEquipIds)
+                      GameCardMixin.anyCardItemBuilder(context: context, id: ceId, width: 24),
+                  ],
+                ),
+                Wrap(
+                  crossAxisAlignment: .center,
+                  children: [
+                    Text("${S.current.item_apple}: "),
+                    for (final recoverId in team.recoverIds)
+                      CachedImage(
+                        imageUrl: apRecovers.firstWhereOrNull((e) => e.id == recoverId)?.icon,
+                        width: 24,
+                        height: 24 * 144 / 132,
+                      ),
+                  ],
+                ),
+              ],
+            ),
+            trailing: FilledButton(
+              onPressed: () {
+                SimpleConfirmDialog(
+                  title: Text(S.current.start),
+                  content: Text(questText),
+                  onTapOk: () {
+                    runtime.runTask(() async {
+                      agent.user.curBattleOptionIndex = index;
+                      final battleOption = agent.user.curBattleOption;
+                      battleOption.loopCount = 1;
+                      await runtime.battle.startLoop();
+                    });
+                  },
+                ).showDialog(context);
+              },
+              child: Text(S.current.start),
+            ),
           ),
-        ),
       ];
     }
 

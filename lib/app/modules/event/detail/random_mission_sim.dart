@@ -90,7 +90,7 @@ class _RandomMissionSimulationPageState extends State<RandomMissionSimulationPag
 
                 for (final x in range(1, 8)) {
                   // for (final x in range(1, 11)) {
-                  for (final y in range(2, 4)) {
+                  for (final y in range(2, 3)) {
                     if (_stopFlag) {
                       return;
                     }
@@ -102,9 +102,11 @@ class _RandomMissionSimulationPageState extends State<RandomMissionSimulationPag
                     data.discardMissionMinLeftNum = y;
                     await _startSimulation(data);
                     history.sort2((data) {
-                      return -Maths.sum(
+                      double x = Maths.sum(
                         data.giftItems.entries.where((e) => data.getScore(e.key) >= 1).map((e) => e.value),
-                      );
+                      ).toDouble();
+                      // x += data.fqCount * 0.314; // free drops
+                      return -x;
                     });
                     if (mounted) setState(() {});
                   }

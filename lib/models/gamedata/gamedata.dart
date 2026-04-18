@@ -836,6 +836,11 @@ class GameTimerData {
   Map<int, Item> items;
   GameConstants constants;
 
+  late final Map<int, EventMission> eventMissions = {
+    for (final mm in masterMissions.values)
+      for (final m in mm.missions) m.id: m,
+  };
+
   GameTimerData({
     this.updatedAt = 0,
     this.hash,
