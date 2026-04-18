@@ -4,6 +4,7 @@ import 'package:archive/archive.dart' show getCrc32;
 
 import 'package:chaldea/app/api/atlas.dart';
 import 'package:chaldea/models/gamedata/mst_data.dart';
+import 'package:chaldea/models/gamedata/raw.dart';
 import 'package:chaldea/models/models.dart';
 import 'package:chaldea/models/userdata/version.dart';
 import 'package:chaldea/packages/logger.dart';
@@ -54,9 +55,7 @@ class FakerAgentJP extends FakerAgent<FRequestJP, AutoLoginDataJP, NetworkManage
       if (dateVer > network.gameTop.dateVer) network.gameTop.dateVer = dateVer;
       if (assetbundle.isNotEmpty) {
         final assetbundleData = network.catMouseGame.mouseInfoMsgpack(base64Decode(assetbundle));
-        final String folderName = assetbundleData['folderName']!;
-        network.gameTop.assetbundleFolder = folderName;
-        // network.gameTop.assetbundle = assetbundle;
+        network.gameTop.assetbundle = RegionAssetBundle.fromJson(assetbundleData);
       }
       return fresp;
     } else {
