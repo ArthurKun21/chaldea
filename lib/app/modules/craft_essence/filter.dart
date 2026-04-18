@@ -9,9 +9,7 @@ import '../common/filter_page_base.dart';
 import '../effect_search/util.dart';
 
 class CraftFilterPage extends FilterPage<CraftFilterData> {
-  final List<Widget> Function(BuildContext context, VoidCallback update)? customFilters;
-
-  const CraftFilterPage({super.key, required super.filterData, super.onChanged, this.customFilters});
+  const CraftFilterPage({super.key, required super.filterData, super.onChanged, super.extraFilters});
 
   @override
   _CraftFilterPageState createState() => _CraftFilterPageState();
@@ -122,7 +120,7 @@ class _CraftFilterPageState extends FilterPageState<CraftFilterData, CraftFilter
                 ),
             ],
           ),
-          ...?widget.customFilters?.call(context, update),
+          ...?widget.extraFilters?.call(context, update),
           FilterGroup<int>(
             title: Text(S.current.rarity),
             options: const [1, 2, 3, 4, 5],

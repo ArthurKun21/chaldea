@@ -180,7 +180,7 @@ class _SelectUserSvtPageState extends State<SelectUserSvtPage> {
                   }
                 },
                 planMode: false,
-                customFilters: (_, update) => [
+                extraFilters: (_, update) => [
                   FilterGroup<_CombineType>(
                     title: Text('Available Combine Type'),
                     showMatchAll: true,

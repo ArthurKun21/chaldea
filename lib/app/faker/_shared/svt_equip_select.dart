@@ -131,7 +131,7 @@ class _SelectUserSvtEquipPageState extends State<SelectUserSvtEquipPage> {
                     setState(() {});
                   }
                 },
-                customFilters: (_, update) => [
+                extraFilters: (_, update) => [
                   FilterGroup<bool>(
                     title: Text('Lock status'),
                     options: const [false, true],

@@ -14,7 +14,6 @@ class ServantFilterPage extends FilterPage<SvtFilterData> {
   final bool planMode;
   final bool showSort;
   final bool showPlans;
-  final List<Widget> Function(BuildContext context, VoidCallback update)? customFilters;
 
   const ServantFilterPage({
     super.key,
@@ -23,7 +22,7 @@ class ServantFilterPage extends FilterPage<SvtFilterData> {
     required this.planMode,
     this.showSort = true,
     this.showPlans = true,
-    this.customFilters,
+    super.extraFilters,
   });
 
   @override
@@ -333,7 +332,7 @@ class _ServantFilterPageState extends FilterPageState<SvtFilterData, ServantFilt
                   ),
               ],
             ),
-          ...?widget.customFilters?.call(context, update),
+          ...?widget.extraFilters?.call(context, update),
           buildClassFilter(filterData.svtClass),
           FilterGroup<int>(
             title: Text(S.current.filter_sort_rarity, style: textStyle),
@@ -396,6 +395,26 @@ class _ServantFilterPageState extends FilterPageState<SvtFilterData, ServantFilt
                   setState(() {
                     update();
                   });
+                },
+              ),
+              FilterGroup<int>(
+                padding: EdgeInsets.zero,
+                title: Text(S.current.bond_bonus, style: textStyle),
+                options: db.gameData.others.bondBonusCes.keys.toList(),
+                showMatchAll: true,
+                values: filterData.bondBonusCeIds,
+                constraints: const BoxConstraints(),
+                shrinkWrap: true,
+                optionBuilder: (v) =>
+                    db.gameData.craftEssencesById[v]?.iconBuilder(
+                      context: context,
+                      jumpToDetail: false,
+                      height: 36,
+                      padding: EdgeInsets.all(3),
+                    ) ??
+                    Text(v.toString()),
+                onFilterChanged: (value, _) {
+                  update();
                 },
               ),
             ],
@@ -496,26 +515,6 @@ class _ServantFilterPageState extends FilterPageState<SvtFilterData, ServantFilt
             ),
           ],
           buildGroupDivider(text: S.current.gamedata),
-
-          FilterGroup<int>(
-            title: Text(S.current.bond_bonus, style: textStyle),
-            options: db.gameData.others.bondBonusCes.keys.toList(),
-            showMatchAll: true,
-            values: filterData.bondBonusCeIds,
-            constraints: const BoxConstraints(),
-            shrinkWrap: true,
-            optionBuilder: (v) =>
-                db.gameData.craftEssencesById[v]?.iconBuilder(
-                  context: context,
-                  jumpToDetail: false,
-                  height: 36,
-                  padding: EdgeInsets.all(3),
-                ) ??
-                Text(v.toString()),
-            onFilterChanged: (value, _) {
-              update();
-            },
-          ),
           FilterGroup<Region>(
             title: Text(S.current.game_server, style: textStyle),
             options: Region.values,
