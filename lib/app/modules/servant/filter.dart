@@ -35,6 +35,7 @@ class ServantFilterPage extends FilterPage<SvtFilterData> {
     int eventId = 0,
     SvtStatus? svtStat,
     SvtPlan? svtPlan,
+    Region useCostumeTraitForRegion = .jp,
   }) {
     svtStat ??= db.curUser.svtStatusOf(svt.collectionNo);
     svtPlan ??= db.curUser.svtPlanOf(svt.collectionNo);
@@ -184,6 +185,15 @@ class ServantFilterPage extends FilterPage<SvtFilterData> {
 
       if (!limits.any((limitCount) {
         final traits = svt.getIndividuality(eventId, limitCount);
+        if (!useCostumeTraitForRegion.isJP && traits.contains(Trait.hasCostume.value)) {
+          if (!db.gameData.mappingData.isSvtTraitRelease(
+            svtCollectionNo: svt.collectionNo,
+            trait: Trait.hasCostume.value,
+            region: useCostumeTraitForRegion,
+          )) {
+            traits.removeWhere((e) => e == Trait.hasCostume.value);
+          }
+        }
         return (filterData.bondBonusCeIds.matchAll
             ? filterData.bondBonusCeIds.options.every
             : filterData.bondBonusCeIds.options.any)((ceId) => _checkCe(traits, ceId));
