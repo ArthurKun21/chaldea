@@ -2721,7 +2721,7 @@ class BattleServantData {
     if (gutsToApply != null) {
       await activateBuff(battleData, BuffAction.functionGutsBefore, opponent: lastHitBy);
       for (final svt in battleData.nonnullActors) {
-        await svt.activateBuff(battleData, BuffAction.action171, opponent: this);
+        await svt.activateBuff(battleData, BuffAction.functionMultiGutsBefore, opponent: this);
       }
 
       gutsToApply.setUsed(this, battleData);
