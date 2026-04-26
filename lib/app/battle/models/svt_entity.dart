@@ -218,7 +218,6 @@ class BattleServantData {
     if (psvt == null) {
       throw BattleException('Invalid PlayerSvtData: null svt');
     }
-    await settings.loadTransformSvt(raiseIfNotFound: true);
     if (settings.transformVal) {
       if (settings.transformSvt != null) {
         psvt = settings.transformSvt!;

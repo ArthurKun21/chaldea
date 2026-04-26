@@ -9,18 +9,23 @@ import '../../../test_init.dart';
 void main() async {
   await initiateForTest();
 
-  group('Test shouldApplyBuff', () async {
+  group('Test shouldApplyBuff', () {
     final battle = BattleData();
-    final okuni = await BattleServantData.fromPlayerSvtData(
-      PlayerSvtData.id(504900)..lv = 90,
-      battle.getNextUniqueId(),
-      isUseGrandBoard: false,
-    );
-    final cba = await BattleServantData.fromPlayerSvtData(
-      PlayerSvtData.id(503900)..lv = 90,
-      battle.getNextUniqueId(),
-      isUseGrandBoard: false,
-    );
+    late final BattleServantData okuni;
+    late final BattleServantData cba;
+
+    setUpAll(() async {
+      okuni = await BattleServantData.fromPlayerSvtData(
+        PlayerSvtData.id(504900)..lv = 90,
+        battle.getNextUniqueId(),
+        isUseGrandBoard: false,
+      );
+      cba = await BattleServantData.fromPlayerSvtData(
+        PlayerSvtData.id(503900)..lv = 90,
+        battle.getNextUniqueId(),
+        isUseGrandBoard: false,
+      );
+    });
 
     test('target check', () {
       final buff = BuffData(

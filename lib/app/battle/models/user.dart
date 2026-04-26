@@ -88,7 +88,6 @@ class PlayerSvtData {
         }
       }
     }
-    updateRankUps();
   }
 
   PreferPlayerSvtDataSource onSelectServant(

@@ -307,6 +307,7 @@ class _ServantOptionEditPageState extends State<ServantOptionEditPage> {
             try {
               playerSvtData.transformVal = v;
               await playerSvtData.loadTransformSvt(raiseIfNotFound: true);
+              playerSvtData.updateRankUps(region: widget.playerRegion, jpTime: questPhase?.jpOpenAt);
             } catch (e) {
               if (mounted) {
                 SimpleConfirmDialog(
