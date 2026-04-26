@@ -23,7 +23,8 @@ part '../../generated/models/gamedata/servant.g.dart';
 
 const int kSuperAokoSvtId = 2501500;
 const int kHydeSvtId = 600710;
-const List<int> kPlayableTransformSvtIds = [kHydeSvtId, kSuperAokoSvtId];
+const int kFrancescaSvtId = 505700;
+const List<int> kPlayableTransformSvtIds = [kHydeSvtId, kSuperAokoSvtId, 1002100, kFrancescaSvtId];
 const String _kSuperAokoIcon = "https://static.wikia.nocookie.net/fategrandorder/images/1/15/S413NP1IconRaw.webp";
 const String _kSuperAokoBorderedIcon = "https://static.wikia.nocookie.net/fategrandorder/images/c/c2/S413NP1Icon.webp";
 
@@ -481,8 +482,9 @@ class Servant extends BasicServant {
       (type == SvtType.combineMaterial ||
           type == SvtType.statusUp ||
           className == SvtClass.uOlgaMarie ||
-          const [kHydeSvtId, kSuperAokoSvtId].contains(id) // transform servants
-          );
+          const [kHydeSvtId, kSuperAokoSvtId, 1002100, kFrancescaSvtId].contains(id) // transform servants
+          ) ||
+      (script?.transformInfo?.saveTransform ?? 0) > 0;
 
   String? get charaGraph => extraAssets.charaGraph.ascension?[1];
 
@@ -563,7 +565,8 @@ class Servant extends BasicServant {
       _icon = costumes[charaId];
     }
     _icon ??= costumes[idx] ?? ascs.values.firstOrNull;
-    if (bordered && collectionNo > 0) _icon = this.bordered(_icon);
+
+    if (bordered && shouldBordered) _icon = this.bordered(_icon);
     return _fixEnemyFace(_icon);
   }
 
@@ -778,8 +781,15 @@ class Servant extends BasicServant {
     }
   }
 
-  SvtStatus get status => db.curUser.svtStatusOf(collectionNo);
-  SvtPlan get curPlan => db.curUser.svtPlanOf(collectionNo);
+  SvtStatus get status {
+    if (id == kFrancescaSvtId) return db.curUser.svtStatusOf(467);
+    return db.curUser.svtStatusOf(collectionNo);
+  }
+
+  SvtPlan get curPlan {
+    if (id == kFrancescaSvtId) return db.curUser.svtPlanOf(467);
+    return db.curUser.svtPlanOf(collectionNo);
+  }
 
   ({int total, int elapsed, int next, int curTotal, int nextTotal}) getCurLvExpData(int lv, int exp) {
     final curTotal = expGrowth.getOrNull(lv - 1) ?? 0, nextTotal = expGrowth.getOrNull(lv) ?? curTotal;
@@ -1757,13 +1767,32 @@ class ServantScript with DataScriptBase {
   Map<int, List<int>>? skillRankUp;
   bool? svtBuffTurnExtend;
   ExtraAssets? maleImage;
+  ServantTransformInfo? transformInfo;
   // List<ImagePartsGroup>? imagePartsGroup;
 
-  ServantScript({this.skillRankUp, this.svtBuffTurnExtend, this.maleImage});
+  ServantScript({this.skillRankUp, this.svtBuffTurnExtend, this.maleImage, this.transformInfo});
 
   factory ServantScript.fromJson(Map<String, dynamic> json) => _$ServantScriptFromJson(json)..setSource(json);
 
   Map<String, dynamic> toJson() => Map.from(source)..addAll(_$ServantScriptToJson(this));
+}
+
+@JsonSerializable()
+class ServantTransformInfo {
+  int? saveTransform;
+  int? saveTransformDefault;
+  // String? condSpriteColor;
+  // String? condLabelColor;
+  // String? condLabelTitle;
+  // int? isNotSkillChange;
+  // int? isNotClassSkillChange;
+  // int? isNotProfileParameterChange;
+
+  ServantTransformInfo({this.saveTransform, this.saveTransformDefault});
+
+  factory ServantTransformInfo.fromJson(Map<String, dynamic> json) => _$ServantTransformInfoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ServantTransformInfoToJson(this);
 }
 
 @JsonSerializable()

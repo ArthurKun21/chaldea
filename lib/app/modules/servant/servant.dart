@@ -392,7 +392,10 @@ class ServantDetailPageState extends State<ServantDetailPage> with SingleTickerP
         return _SubTabInfo(
           tab: tab,
           tabBuilder: () => S.current.illustration,
-          viewBuilder: (ctx) => SvtIllustrationTab(svt: svt),
+          viewBuilder: (ctx) => TransformSvtProfileTabber(
+            svt: svt,
+            builder: (context, svt, _) => SvtIllustrationTab(svt: svt),
+          ),
         );
       case SvtTab.relatedCards:
         if (!svt.isServantType) return null;

@@ -335,6 +335,7 @@ extension BattleTeamFormationX on BattleTeamFormation {
         return SvtSaveData(
           svtId: userSvt.svtId,
           limitCount: userSvt.dispLimitCount,
+          // transformVal: 0,
           skillLvs: [userSvt.skillLv1, userSvt.skillLv2, userSvt.skillLv3],
           skillIds: [userSvt.skillId1, userSvt.skillId2, userSvt.skillId3],
           appendLvs: kAppendSkillNums.map((skillNum) => appendPassive2Lvs[skillNum + 99] ?? 0).toList(),
@@ -421,6 +422,7 @@ extension BattleTeamFormationX on BattleTeamFormation {
       return SvtSaveData(
         svtId: userSvt.svtId,
         limitCount: userSvt.dispLimitCount,
+        transformVal: userSvt.transformVal ?? 0,
         skillLvs: [userSvt.skillLv1, userSvt.skillLv2, userSvt.skillLv3],
         skillIds: [null, null, null],
         appendLvs: mstData.getSvtAppendSkillLvs(userSvt),

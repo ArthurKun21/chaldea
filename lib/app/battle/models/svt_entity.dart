@@ -206,15 +206,23 @@ class BattleServantData {
     return svt;
   }
 
-  factory BattleServantData.fromPlayerSvtData(
-    final PlayerSvtData settings,
+  // Must handle error
+  static Future<BattleServantData> fromPlayerSvtData(
+    PlayerSvtData settings,
     final int uniqueId, {
     final int startingPosition = 0,
     required bool isUseGrandBoard,
-  }) {
-    final psvt = settings.svt;
+  }) async {
+    settings = settings.copy();
+    Servant? psvt = settings.svt;
     if (psvt == null) {
       throw BattleException('Invalid PlayerSvtData: null svt');
+    }
+    await settings.loadTransformSvt(raiseIfNotFound: true);
+    if (settings.transformVal) {
+      if (settings.transformSvt != null) {
+        psvt = settings.transformSvt!;
+      }
     }
 
     final growCurve = psvt.growCurveForLimit(settings.limitCount);
@@ -224,7 +232,7 @@ class BattleServantData {
       isUseGrandBoard: isUseGrandBoard,
     );
     svt
-      ..playerSvtData = settings.copy()
+      ..playerSvtData = settings
       ..uniqueId = uniqueId
       ..niceSvt = psvt
       ..svtId = psvt.id
@@ -1420,7 +1428,11 @@ class BattleServantData {
     niceSvt = targetSvt;
     final limitCount = dataVals.SetLimitCount;
     if (limitCount != null) {
-      playerSvtData!.limitCount = limitCount;
+      if (dataVals.UseUserSpecifiedLimitCount == 1) {
+        // limitCount unchanged
+      } else {
+        playerSvtData!.limitCount = limitCount;
+      }
     }
 
     // build new skills

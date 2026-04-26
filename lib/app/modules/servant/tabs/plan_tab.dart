@@ -33,7 +33,7 @@ class _SvtPlanTabState extends State<SvtPlanTab> {
 
   SvtPlan get plan => db.curUser.svtPlanOf(svt.collectionNo);
 
-  SvtStatus get status => db.curUser.svtStatusOf(svt.collectionNo);
+  SvtStatus get status => svt.status;
 
   @override
   void initState() {

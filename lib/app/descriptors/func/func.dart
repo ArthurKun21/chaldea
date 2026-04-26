@@ -1136,7 +1136,9 @@ class FuncDescriptor extends StatelessWidget {
     }
 
     if (func.funcType == FuncType.transformServant) {
-      final transformId = vals?.Value, transformLimit = vals?.SetLimitCount;
+      final transformId = vals?.Value,
+          transformLimit = vals?.SetLimitCount,
+          useUserSpecifiedLimitCount = vals?.UseUserSpecifiedLimitCount;
       if (transformId != null) {
         final transformSvt = db.gameData.servantsById[transformId] ?? db.gameData.entities[transformId];
         if (transformSvt != null) {
@@ -1157,7 +1159,9 @@ class FuncDescriptor extends StatelessWidget {
             context: context,
             text: transformLimit == null
                 ? ' $transformId '
-                : ' $transformId[${S.current.ascension_short}$transformLimit] ',
+                : useUserSpecifiedLimitCount == null
+                ? ' $transformId[${S.current.ascension_short}$transformLimit] '
+                : ' $transformId ', // limitCount unchanged
             onTap: () {
               router.push(url: Routes.servantI(transformId));
             },

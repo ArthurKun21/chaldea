@@ -1149,12 +1149,26 @@ ServantScript _$ServantScriptFromJson(Map json) => ServantScript(
   maleImage: json['maleImage'] == null
       ? null
       : ExtraAssets.fromJson(Map<String, dynamic>.from(json['maleImage'] as Map)),
+  transformInfo: json['transformInfo'] == null
+      ? null
+      : ServantTransformInfo.fromJson(Map<String, dynamic>.from(json['transformInfo'] as Map)),
 );
 
 Map<String, dynamic> _$ServantScriptToJson(ServantScript instance) => <String, dynamic>{
   'SkillRankUp': instance.skillRankUp?.map((k, e) => MapEntry(k.toString(), e)),
   'svtBuffTurnExtend': instance.svtBuffTurnExtend,
   'maleImage': instance.maleImage?.toJson(),
+  'transformInfo': instance.transformInfo?.toJson(),
+};
+
+ServantTransformInfo _$ServantTransformInfoFromJson(Map json) => ServantTransformInfo(
+  saveTransform: (json['saveTransform'] as num?)?.toInt(),
+  saveTransformDefault: (json['saveTransformDefault'] as num?)?.toInt(),
+);
+
+Map<String, dynamic> _$ServantTransformInfoToJson(ServantTransformInfo instance) => <String, dynamic>{
+  'saveTransform': instance.saveTransform,
+  'saveTransformDefault': instance.saveTransformDefault,
 };
 
 SvtScript _$SvtScriptFromJson(Map json) => SvtScript(

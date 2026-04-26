@@ -286,7 +286,7 @@ class ServantListPageState extends State<ServantListPage> with SearchableListSta
   }
 
   Widget _getDetailTable(Servant svt) {
-    SvtStatus status = db.curUser.svtStatusOf(svt.collectionNo);
+    SvtStatus status = svt.status;
     SvtPlan cur = status.cur, target = db.curUser.svtPlanOf(svt.collectionNo);
     Widget _getRange(int _c, int _t, int? m) {
       TextStyle? style;
@@ -371,7 +371,7 @@ class ServantListPageState extends State<ServantListPage> with SearchableListSta
   }
 
   bool isSvtFavorite(Servant svt) {
-    return db.curUser.svtStatusOf(svt.collectionNo).cur.favorite;
+    return svt.status.cur.favorite;
   }
 
   bool changeTarget = true;
@@ -559,7 +559,7 @@ class ServantListPageState extends State<ServantListPage> with SearchableListSta
 
   @override
   Widget gridItemBuilder(Servant svt) {
-    final status = db.curUser.svtStatusOf(svt.collectionNo);
+    final status = svt.status;
     Widget textBuilder(TextStyle style) {
       return Text.rich(
         TextSpan(
@@ -867,7 +867,7 @@ class ServantListPageState extends State<ServantListPage> with SearchableListSta
   }
 
   Widget _usualListItemBuilder(Servant svt) {
-    final status = db.curUser.svtStatusOf(svt.collectionNo);
+    final status = svt.status;
     Widget? getStatusText(BuildContext context) {
       if (!status.cur.favorite) return null;
       Widget statusText = Column(
@@ -980,7 +980,7 @@ class ServantListPageState extends State<ServantListPage> with SearchableListSta
   void _batchChange(void Function(Servant svt, SvtPlan cur, SvtPlan target) onChanged) {
     for (final svt in shownList) {
       if (isSvtFavorite(svt) && !hiddenPlanServants.contains(svt)) {
-        final cur = db.curUser.svtStatusOf(svt.collectionNo).cur, target = db.curUser.svtPlanOf(svt.collectionNo);
+        final cur = svt.status.cur, target = db.curUser.svtPlanOf(svt.collectionNo);
         onChanged(svt, cur, target);
       }
     }

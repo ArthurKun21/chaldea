@@ -19,7 +19,7 @@ class SvtTdTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> children = [];
-    final status = db.curUser.svtStatusOf(svt.collectionNo).cur;
+    final status = svt.status.cur;
     final overrideData = OverrideTDData.fromAscensionAdd(svt.ascensionAdd);
 
     void addOneGroup(int tdNum, List<NiceTd> tds) {

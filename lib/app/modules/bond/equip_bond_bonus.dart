@@ -15,6 +15,8 @@ import 'package:chaldea/widgets/widgets.dart';
 import '../common/filter_page_base.dart';
 import '../servant/filter.dart';
 
+const _kExtraPlayableSvtIds = <int>[505700];
+
 typedef _GroupItem = ({int rateCount, List<int> ceIds, List<({Servant svt, List<int> limitCounts})> svts});
 
 class EquipBondBonusTab extends StatefulWidget {
@@ -102,10 +104,10 @@ class _EquipBondBonusTabState extends State<EquipBondBonusTab> {
   @override
   void initState() {
     super.initState();
-    initData();
+    initData(initFilters: true);
   }
 
-  void initData() {
+  void initData({bool initFilters = false}) {
     allCeData.clear();
     allCeMatchSvtData.clear();
     // ce data
@@ -148,7 +150,7 @@ class _EquipBondBonusTabState extends State<EquipBondBonusTab> {
     // ce mapping svt
     final svts = _targetSvts.isNotEmpty
         ? _targetSvts.values.toList()
-        : db.gameData.servantsById.values.where((e) => e.collectionNo > 0);
+        : db.gameData.servantsById.values.where((e) => e.collectionNo > 0 || _kExtraPlayableSvtIds.contains(e.id));
     for (final (:ce, :traits, rateCount: _) in allCeData.values) {
       final svtLimitsData = allCeMatchSvtData[ce.id] ??= {};
       for (final svt in svts) {
@@ -158,10 +160,12 @@ class _EquipBondBonusTabState extends State<EquipBondBonusTab> {
       }
     }
 
-    // hide unreleased ces
-    for (final ceId in allCeData.keys) {
-      if (!isCeReleased(ceId, db.curUser.region)) {
-        extraFilterData.ceStates[ceId] = _FilterType.hide;
+    if (initFilters) {
+      // hide unreleased ces
+      for (final ceId in allCeData.keys) {
+        if (!isCeReleased(ceId, db.curUser.region)) {
+          extraFilterData.ceStates[ceId] = _FilterType.hide;
+        }
       }
     }
   }
@@ -211,9 +215,6 @@ class _EquipBondBonusTabState extends State<EquipBondBonusTab> {
       if (matched) {
         matchedLimitCounts.add(limitCount);
       }
-    }
-    if (svt.collectionNo == 300) {
-      print('$bonusTraitsList, No.${svt.collectionNo}, matchedLimitCounts $matchedLimitCounts');
     }
 
     return matchedLimitCounts;

@@ -37,8 +37,8 @@ class ServantFilterPage extends FilterPage<SvtFilterData> {
     SvtPlan? svtPlan,
     Region useCostumeTraitForRegion = .jp,
   }) {
-    svtStat ??= db.curUser.svtStatusOf(svt.collectionNo);
-    svtPlan ??= db.curUser.svtPlanOf(svt.collectionNo);
+    svtStat ??= svt.status;
+    svtPlan ??= svt.curPlan;
     final favoriteState = planMode ? filterData.planFavorite : filterData.favorite;
     if (!favoriteState.check(svtStat.cur.favorite)) {
       return false;

@@ -9,14 +9,14 @@ import '../../../test_init.dart';
 void main() async {
   await initiateForTest();
 
-  group('Test shouldApplyBuff', () {
+  group('Test shouldApplyBuff', () async {
     final battle = BattleData();
-    final okuni = BattleServantData.fromPlayerSvtData(
+    final okuni = await BattleServantData.fromPlayerSvtData(
       PlayerSvtData.id(504900)..lv = 90,
       battle.getNextUniqueId(),
       isUseGrandBoard: false,
     );
-    final cba = BattleServantData.fromPlayerSvtData(
+    final cba = await BattleServantData.fromPlayerSvtData(
       PlayerSvtData.id(503900)..lv = 90,
       battle.getNextUniqueId(),
       isUseGrandBoard: false,
