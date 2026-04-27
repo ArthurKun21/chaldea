@@ -6,7 +6,6 @@ import '../../app/app.dart';
 import '../../app/tools/gamedata_loader.dart';
 import '../db.dart';
 import '../userdata/filter_data.dart';
-import '../userdata/remote_config.dart';
 import '../userdata/userdata.dart';
 import '_helper.dart';
 import 'common.dart';
@@ -515,18 +514,24 @@ class Servant extends BasicServant {
   }
 
   String? get aprilFoolIcon {
-    if (originalCollectionNo <= 0 || originalCollectionNo > 306) return null;
-    if ([83, 149, 151, 152, 168, 240].contains(originalCollectionNo)) {
-      return null;
-    }
-    final padded = originalCollectionNo.toString().padLeft(3, '0');
-    return '${HostsX.atlasAsset.kGlobal}/JP/FFO/Atlas/Sprite/icon_servant_$padded.png';
+    // JP 2021
+    // if (originalCollectionNo <= 0 || originalCollectionNo > 306) return null;
+    // if ([83, 149, 151, 152, 168, 240].contains(originalCollectionNo)) {
+    //   return null;
+    // }
+    // final padded = originalCollectionNo.toString().padLeft(3, '0');
+    // return '${HostsX.atlasAsset.kGlobal}/JP/FFO/Atlas/Sprite/icon_servant_$padded.png';
+    // return '${HostsX.atlasAsset.kGlobal}/JP/FFO/Atlas/Sprite_bordered/icon_servant_${padded}_bordered.png';
+
+    // JP 2026
+    if (originalCollectionNo <= 0 || originalCollectionNo > 466) return null;
+    return "https://static.atlasacademy.io/JP/External/JP_AF_2026/Faces/f_${id}4.png";
   }
 
   String? get aprilFoolBorderedIcon {
-    if (aprilFoolIcon == null) return null;
-    final padded = originalCollectionNo.toString().padLeft(3, '0');
-    return '${HostsX.atlasAsset.kGlobal}/JP/FFO/Atlas/Sprite_bordered/icon_servant_${padded}_bordered.png';
+    // final aprilFoolIcon = this.aprilFoolIcon;
+    // if (aprilFoolIcon == null) return null;
+    return bordered(aprilFoolIcon);
   }
 
   int battleCharaToLimitCount(int battleCharaId) {
