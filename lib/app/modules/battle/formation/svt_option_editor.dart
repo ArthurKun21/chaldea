@@ -225,8 +225,67 @@ class _ServantOptionEditPageState extends State<ServantOptionEditPage> {
       bondCheck: playerSvtData.bondLv,
     );
     final saveTransformSvtId = _baseSvt.script?.transformInfo?.saveTransform ?? 0;
+    final transformSvt =
+        playerSvtData.transformSvt ??
+        db.gameData.servantsById[saveTransformSvtId] ??
+        db.gameData.entities[saveTransformSvtId];
     final List<Widget> children = [
       _header(context),
+      if (saveTransformSvtId > 0)
+        SwitchListTile.adaptive(
+          dense: true,
+          value: playerSvtData.transformVal,
+          secondary: Row(
+            mainAxisSize: .min,
+            children: [
+              for (final svtId in {_baseSvt.id, _baseSvt.script?.transformInfo?.saveTransform ?? 0})
+                if (svtId != 0)
+                  GameCardMixin.anyCardItemBuilder(
+                    context: context,
+                    id: svtId,
+                    width: 32,
+                    icon: db.gameData.servantsById[svtId]?.ascendIcon(playerSvtData.limitCount),
+                  ),
+            ],
+          ),
+          title: Text("Transform Servant"),
+          subtitle: Text.rich(
+            TextSpan(
+              children: [
+                SharedBuilder.textButtonSpan(
+                  context: context,
+                  text: [_baseSvt.id, _baseSvt.lName.l].join(' '),
+                  onTap: _baseSvt.routeTo,
+                ),
+                TextSpan(text: ' -> '),
+                SharedBuilder.textButtonSpan(
+                  context: context,
+                  text: [saveTransformSvtId, ?transformSvt?.lName.l].join(' '),
+                  onTap: () {
+                    router.push(url: Routes.servantI(saveTransformSvtId));
+                  },
+                ),
+              ],
+            ),
+          ),
+          onChanged: (v) async {
+            try {
+              playerSvtData.transformVal = v;
+              await playerSvtData.loadTransformSvt(raiseIfNotFound: true);
+              playerSvtData.updateRankUps(region: widget.playerRegion, jpTime: questPhase?.jpOpenAt);
+            } catch (e) {
+              if (mounted) {
+                SimpleConfirmDialog(
+                  title: Text(S.current.error),
+                  content: Text("Set transform data failed! Retry!\n\n$e"),
+                  scrollable: true,
+                  showCancel: false,
+                ).showDialog(context);
+              }
+            }
+            setState(() {});
+          },
+        ),
       divider,
       Padding(padding: const EdgeInsetsDirectional.only(start: 16, end: 16), child: _buildSliderGroup()),
       tipsCard,
@@ -261,66 +320,6 @@ class _ServantOptionEditPageState extends State<ServantOptionEditPage> {
         },
         title: Text(S.current.grand_servant),
       ),
-      if (saveTransformSvtId > 0)
-        SwitchListTile.adaptive(
-          dense: true,
-          value: playerSvtData.transformVal,
-          secondary: Row(
-            mainAxisSize: .min,
-            children: [
-              for (final svtId in {_baseSvt.id, _baseSvt.script?.transformInfo?.saveTransform ?? 0})
-                if (svtId != 0)
-                  GameCardMixin.anyCardItemBuilder(
-                    context: context,
-                    id: svtId,
-                    width: 32,
-                    icon: db.gameData.servantsById[svtId]?.ascendIcon(playerSvtData.limitCount),
-                  ),
-            ],
-          ),
-          title: Text("Transform Servant"),
-          subtitle: Text.rich(
-            TextSpan(
-              children: [
-                SharedBuilder.textButtonSpan(
-                  context: context,
-                  text: [_baseSvt.id, _baseSvt.lName.l].join(' '),
-                  onTap: () {
-                    router.push(url: Routes.servantI(saveTransformSvtId));
-                  },
-                ),
-                TextSpan(text: ' -> '),
-                SharedBuilder.textButtonSpan(
-                  context: context,
-                  text: [
-                    saveTransformSvtId,
-                    if (playerSvtData.transformSvt != null) playerSvtData.transformSvt!.lName.l,
-                  ].join(' '),
-                  onTap: () {
-                    router.push(url: Routes.servantI(saveTransformSvtId));
-                  },
-                ),
-              ],
-            ),
-          ),
-          onChanged: (v) async {
-            try {
-              playerSvtData.transformVal = v;
-              await playerSvtData.loadTransformSvt(raiseIfNotFound: true);
-              playerSvtData.updateRankUps(region: widget.playerRegion, jpTime: questPhase?.jpOpenAt);
-            } catch (e) {
-              if (mounted) {
-                SimpleConfirmDialog(
-                  title: Text(S.current.error),
-                  content: Text("Set transform data failed! Retry!\n\n$e"),
-                  scrollable: true,
-                  showCancel: false,
-                ).showDialog(context);
-              }
-            }
-            setState(() {});
-          },
-        ),
       divider,
       _buildEquips(),
       _buildClassBoard(),

@@ -31,13 +31,14 @@ class BattleServantData {
 
   // performance issue,
   String? _battleNameCache;
-  int? _limitCountCache;
+  String? _battleNameCacheKey;
   String get lBattleName {
     if (isPlayer) {
-      if (_battleNameCache != null && _limitCountCache == playerSvtData!.limitCount) {
+      String battleNameCacheKey = "${niceSvt?.id}-${playerSvtData!.limitCount}";
+      if (_battleNameCache != null && _battleNameCacheKey == battleNameCacheKey) {
         return _battleNameCache!;
       } else {
-        _limitCountCache = playerSvtData!.limitCount;
+        _battleNameCacheKey = battleNameCacheKey;
         return _battleNameCache = niceSvt!.lBattleName(playerSvtData!.limitCount).l;
       }
     } else {

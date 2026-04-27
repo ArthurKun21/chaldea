@@ -512,20 +512,23 @@ class ServantDetailPageState extends State<ServantDetailPage> with SingleTickerP
                       );
                     }
 
-                    final faces = svt.extraAssets.faces;
-                    if (faces.ascension != null) {
-                      faces.ascension!.forEach((key, value) {
-                        _addOne('${S.current.ascension} $key', value);
-                      });
+                    for (final _svt in {svt, ?svt.script?.transformInfo?.saveTransformSvt}) {
+                      final faces = _svt.extraAssets.faces;
+                      if (faces.ascension != null) {
+                        faces.ascension!.forEach((key, value) {
+                          _addOne('${S.current.ascension} $key', value);
+                        });
+                      }
+                      if (faces.costume != null) {
+                        faces.costume!.forEach((key, value) {
+                          _addOne(_svt.profile.costume[key]?.lName.l ?? '${S.current.costume} $key', value);
+                        });
+                      }
+                      if (_svt.aprilFoolBorderedIcon != null) {
+                        _addOne(S.current.april_fool, svt.aprilFoolBorderedIcon);
+                      }
                     }
-                    if (faces.costume != null) {
-                      faces.costume!.forEach((key, value) {
-                        _addOne(svt.profile.costume[key]?.lName.l ?? '${S.current.costume} $key', value);
-                      });
-                    }
-                    if (svt.aprilFoolBorderedIcon != null) {
-                      _addOne(S.current.april_fool, svt.aprilFoolBorderedIcon);
-                    }
+
                     return SimpleConfirmDialog(
                       title: Text(S.current.svt_ascension_icon),
                       content: SingleChildScrollView(

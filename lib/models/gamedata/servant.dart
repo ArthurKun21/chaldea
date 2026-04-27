@@ -1788,6 +1788,10 @@ class ServantTransformInfo {
   // int? isNotClassSkillChange;
   // int? isNotProfileParameterChange;
 
+  Servant? get saveTransformSvt => db.gameData.servantsById[saveTransform];
+  BasicServant? get saveTransformEntity =>
+      db.gameData.servantsById[saveTransform] ?? db.gameData.entities[saveTransform];
+
   ServantTransformInfo({this.saveTransform, this.saveTransformDefault});
 
   factory ServantTransformInfo.fromJson(Map<String, dynamic> json) => _$ServantTransformInfoFromJson(json);
