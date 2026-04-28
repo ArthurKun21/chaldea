@@ -465,6 +465,7 @@ class UserServantEntity with DataEntityBase<int> {
   int? status;
   int limitCount; // ascension
   int dispLimitCount;
+  int get dispIconLimitCount => Servant.dispLimitCountToLimitCount(dispLimitCount);
   int imageLimitCount;
   int commandCardLimitCount;
   int iconLimitCount;
@@ -473,6 +474,7 @@ class UserServantEntity with DataEntityBase<int> {
   int randomLimitCountSupport;
   int limitCountSupport;
   int? dispLimitCount2;
+  int get dispIconLimitCount2 => Servant.dispLimitCountToLimitCount(dispLimitCount2 ?? 0);
   int? imageLimitCount2;
   int? commandCardLimitCount2;
   int? iconLimitCount2;
@@ -646,6 +648,18 @@ class UserServantEntity with DataEntityBase<int> {
   }
 
   List<int> get skillLvs => [skillLv1, skillLv2, skillLv3];
+
+  String? get icon {
+    final svt = dbSvt;
+    if (transformVal == 1) {
+      final transformSvt = svt?.script?.transformInfo?.saveTransformSvt;
+      if (transformSvt != null) {
+        return transformSvt.ascendIcon(dispIconLimitCount2);
+      }
+    }
+    if (svt != null) return svt.ascendIcon(dispIconLimitCount);
+    return dbCE?.borderedIcon ?? dbEntity?.borderedIcon;
+  }
 }
 
 @JsonSerializable(createToJson: false)

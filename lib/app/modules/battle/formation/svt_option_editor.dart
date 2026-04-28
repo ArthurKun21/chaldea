@@ -238,14 +238,13 @@ class _ServantOptionEditPageState extends State<ServantOptionEditPage> {
           secondary: Row(
             mainAxisSize: .min,
             children: [
-              for (final svtId in {_baseSvt.id, _baseSvt.script?.transformInfo?.saveTransform ?? 0})
-                if (svtId != 0)
-                  GameCardMixin.anyCardItemBuilder(
-                    context: context,
-                    id: svtId,
-                    width: 32,
-                    icon: db.gameData.servantsById[svtId]?.ascendIcon(playerSvtData.limitCount),
-                  ),
+              for (final svtId in {_baseSvt.id, ?_baseSvt.script?.transformInfo?.saveTransform})
+                GameCardMixin.anyCardItemBuilder(
+                  context: context,
+                  id: svtId,
+                  width: 32,
+                  icon: db.gameData.servantsById[svtId]?.ascendIcon(playerSvtData.limitCount),
+                ),
             ],
           ),
           title: Text("Transform Servant"),
@@ -513,7 +512,7 @@ class _ServantOptionEditPageState extends State<ServantOptionEditPage> {
     final atk = (growCurve.atk.getOrNull(playerSvtData.lv - 1) ?? 0) + playerSvtData.atkFou,
         hp = (growCurve.hp.getOrNull(playerSvtData.lv - 1) ?? 0) + playerSvtData.hpFou;
     return CustomTile(
-      leading: dispSvt.iconBuilder(
+      leading: _baseSvt.iconBuilder(
         context: context,
         height: 72,
         jumpToDetail: true,

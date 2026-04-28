@@ -543,17 +543,21 @@ class Servant extends BasicServant {
   }
 
   static int dispLimitCountToLimitCount(int dispLimitCount) {
-    return const <int, int>{0: 0, 1: 2, 2: 2, 3: 3, 4: 4}[dispLimitCount] ?? dispLimitCount;
+    return const <int, int>{0: 0, 1: 0, 2: 2, 3: 4, 4: 4}[dispLimitCount] ?? dispLimitCount;
+  }
+
+  static int dispLimitCountToMinLimitCount(int dispLimitCount) {
+    return const <int, int>{0: 0, 1: 0, 2: 1, 3: 3, 4: 4}[dispLimitCount] ?? dispLimitCount;
   }
 
   // not limitCount=0-4
-  String? ascendIcon(int ascOrCostumeIdOrCharaId, [bool bordered = true]) {
+  String? ascendIcon(int ascOrCostumeIdOrCharaId, {int? transformVal, bool bordered = true}) {
     if (id == kSuperAokoSvtId) {
       return bordered ? _kSuperAokoBorderedIcon : _kSuperAokoIcon;
     }
     final idx = ascOrCostumeIdOrCharaId;
-    final ascs = extraAssets.faces.ascension ?? {};
-    final costumes = extraAssets.faces.costume ?? {};
+    final ascs = extraAssets.faces.ascension ?? const {};
+    final costumes = extraAssets.faces.costume ?? const {};
     String? _icon;
     if (idx < 0) {
       return null;
@@ -610,10 +614,15 @@ class Servant extends BasicServant {
     String? overrideIcon,
     String? name,
     bool showName = false,
+    int? transformVal,
   }) {
     option = ImageWithTextOption(
       errorWidget: (context, url, error) => CachedImage(imageUrl: Atlas.common.unknownEnemyIcon),
     ).merge(option);
+    if (transformVal == 1) {
+      overrideIcon ??= script?.transformInfo?.saveTransformSvt?.customIcon;
+    }
+    overrideIcon ??= customIcon;
     return super.iconBuilder(
       context: context,
       width: width,
@@ -625,7 +634,7 @@ class Servant extends BasicServant {
       option: option,
       jumpToDetail: jumpToDetail,
       popDetail: popDetail,
-      overrideIcon: overrideIcon ?? customIcon,
+      overrideIcon: overrideIcon,
       name: name,
       showName: showName,
     );
@@ -1113,16 +1122,18 @@ class ExtraCCAssets {
 
 @JsonSerializable()
 class ExtraAssets extends ExtraCCAssets {
+  // ExtraAssetsUrl charaGraph; // 1,2,3,4
+  // ExtraAssetsUrl faces; // 1,2,3,4
   ExtraAssetsUrl charaGraphEx;
   ExtraAssetsUrl charaGraphName;
-  ExtraAssetsUrl narrowFigure;
-  ExtraAssetsUrl charaFigure;
+  ExtraAssetsUrl narrowFigure; // 1,2,3,4
+  ExtraAssetsUrl charaFigure; // 1,2,3: dispLimitCount
   Map<int, ExtraAssetsUrl> charaFigureForm;
   Map<int, ExtraAssetsUrl> charaFigureMulti;
   Map<int, ExtraAssetsUrl> charaFigureMultiCombine;
   Map<int, ExtraAssetsUrl> charaFigureMultiLimitUp;
-  ExtraAssetsUrl commands;
-  ExtraAssetsUrl status;
+  ExtraAssetsUrl commands; // 1,2,3: dispLimitCount
+  ExtraAssetsUrl status; // 1,2,3: dispLimitCount
   ExtraAssetsUrl equipFace;
   ExtraAssetsUrl image;
   ExtraAssetsUrl spriteModel;

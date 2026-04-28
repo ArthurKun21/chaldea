@@ -311,16 +311,15 @@ class _UserDeckSetupPageState extends State<UserDeckSetupPage> with FakerRuntime
         : questPhase?.supportServants.firstWhereOrNull(
             (support) => support.npcSvtFollowerId == deckSvt.npcFollowerSvtId,
           );
-    final fixedSupport = questPhase?.supportServants.firstWhereOrNull(
+    SupportServant? fixedSupport = questPhase?.supportServants.firstWhereOrNull(
       (e) => deckSvt.initPos != null && e.script?.eventDeckIndex == deckSvt.initPos,
     );
+    // edit mode should show original data
+    fixedSupport = null;
 
     Widget baseSvtWidget = GameCardMixin.cardIconBuilder(
       context: context,
-      icon:
-          mySvt?.ascendIcon(userSvt?.dispLimitCount ?? -1) ??
-          (npc ?? fixedSupport)?.svt.icon ??
-          Atlas.common.emptySvtIcon,
+      icon: userSvt?.icon ?? (npc ?? fixedSupport)?.svt.icon ?? Atlas.common.emptySvtIcon,
       width: 56,
       aspectRatio: 132 / 144,
       option: ImageWithTextOption(
@@ -376,7 +375,8 @@ class _UserDeckSetupPageState extends State<UserDeckSetupPage> with FakerRuntime
                 dense: true,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 24),
                 leading:
-                    mySvt?.iconBuilder(context: context) ?? (npc ?? fixedSupport)?.svt.iconBuilder(context: context),
+                    mySvt?.iconBuilder(context: context, overrideIcon: userSvt?.icon) ??
+                    (npc ?? fixedSupport)?.svt.iconBuilder(context: context),
                 title: Text(mySvt?.lName.l ?? (npc ?? fixedSupport)?.svt.lName.l ?? 'svt ${deckSvt.userSvtId}'),
                 subtitle: Text(
                   <String>[
@@ -753,7 +753,7 @@ class _UserDeckSetupPageState extends State<UserDeckSetupPage> with FakerRuntime
       final userSvt = mstData.userSvt[deckSvt.userSvtId];
       final svt = db.gameData.servantsById[userSvt?.svtId];
       if (svt != null) {
-        cost += svt.getAscended(userSvt?.dispLimitCount ?? -1, (v) => v.overwriteCost) ?? svt.cost;
+        cost += svt.getAscended(userSvt?.dispIconLimitCount ?? -1, (v) => v.overwriteCost) ?? svt.cost;
       }
 
       final userSvtEquip = mstData.userSvt[deckSvt.userSvtEquipIds.firstOrNull];

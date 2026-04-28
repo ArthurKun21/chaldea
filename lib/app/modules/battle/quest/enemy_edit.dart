@@ -433,7 +433,7 @@ class _QuestEnemyEditPageState extends State<QuestEnemyEditPage> {
       limitCount = costume?.battleCharaId ?? 0;
     }
     enemy.limit.limitCount = limitCount;
-    final face = niceSvt!.ascendIcon(limitCount, false);
+    final face = niceSvt!.ascendIcon(limitCount, bordered: false);
     if (face != null) {
       // ignore: invalid_use_of_protected_member
       enemy.svt.face = face;
