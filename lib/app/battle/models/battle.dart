@@ -476,6 +476,7 @@ class BattleData {
   }
 
   Future<void> _nextTurn() async {
+    await fieldAi.actTurnStart(this);
     await _replenishActors();
     bool addTurn = true;
 
