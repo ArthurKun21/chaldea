@@ -34,7 +34,7 @@ class FieldAiManager with _AiManagerBase {
       final mainAis = NiceAiCollection.sortedAis(aiCollection.mainAis);
       if (!hasOnlyOneSkill(mainAis)) continue;
       for (final ai in mainAis) {
-        if (ai.timingDescription != timing) continue;
+        if (ai.timing != timing.value) continue;
         if (ai.cond == NiceAiCond.none || (ai.cond == NiceAiCond.turn && ai.vals.firstOrNull == 1)) {
           if (ai.aiAct.type == NiceAiActType.skillId && ai.aiAct.target == NiceAiActTarget.random) {
             final skill = ai.aiAct.skill;
