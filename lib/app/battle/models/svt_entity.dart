@@ -487,11 +487,12 @@ class BattleServantData {
     }
 
     if (isPlayer) {
-      for (int index = 0; index < niceSvt!.appendPassive.length; index += 1) {
+      final appendPassives = playerSvtData!.svt?.appendPassive ?? [];
+      for (int index = 0; index < appendPassives.length; index += 1) {
         final appendLv = playerSvtData!.appendLvs.length > index ? playerSvtData!.appendLvs[index] : 0;
         if (appendLv > 0) {
           final skillInfo = BattleSkillInfoData(
-            niceSvt!.appendPassive[index].skill,
+            appendPassives[index].skill,
             type: SkillInfoType.svtOtherPassive,
             skillLv: appendLv,
           );
