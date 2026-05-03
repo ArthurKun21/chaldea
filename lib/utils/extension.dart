@@ -684,3 +684,23 @@ Iterable<int> range(int a, [int? b, int? c]) sync* {
     yield i;
   }
 }
+
+extension TextSpanX on TextSpan {
+  String getDebugFullText({String Function(InlineSpan span)? nonTextSpanDescriptor}) {
+    if (children == null) return text ?? "";
+    final buffer = StringBuffer();
+    if (text != null) buffer.write(text);
+    for (final child in children!) {
+      if (child is TextSpan) {
+        buffer.write(child.getDebugFullText(nonTextSpanDescriptor: nonTextSpanDescriptor));
+      } else {
+        if (nonTextSpanDescriptor != null) {
+          buffer.write(nonTextSpanDescriptor(child));
+        } else {
+          buffer.write(child.toString());
+        }
+      }
+    }
+    return buffer.toString();
+  }
+}
