@@ -123,8 +123,7 @@ class CostumeDetailPage extends StatelessWidget {
             scrollable: false,
             assets: svt.extraAssets,
             getUrls: (urls) {
-              final url = urls.costume?[costume.battleCharaId];
-              return url == null ? [] : [url];
+              return [?urls.costume?[costume.battleCharaId], ?urls.transformGroup?[costume.battleCharaId]];
             },
             charaGraphPlaceholder: (_, _) => db.getIconImage(svt.classCard),
           ),

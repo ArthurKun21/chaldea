@@ -524,6 +524,11 @@ class ServantDetailPageState extends State<ServantDetailPage> with SingleTickerP
                           _addOne(_svt.profile.costume[key]?.lName.l ?? '${S.current.costume} $key', value);
                         });
                       }
+                      if (faces.transformGroup != null) {
+                        faces.transformGroup!.forEach((key, value) {
+                          _addOne('Group $key', value);
+                        });
+                      }
                       if (_svt.aprilFoolBorderedIcon != null) {
                         _addOne(S.current.april_fool, svt.aprilFoolBorderedIcon);
                       }

@@ -461,6 +461,7 @@ class Servant extends BasicServant {
     if (id == kSuperAokoSvtId) return _kSuperAokoIcon;
 
     final _icons = <String>[
+      ...?extraAssets.faces.transformGroup?.values,
       ...?extraAssets.faces.ascension?.values,
       ...?extraAssets.faces.equip?.values,
       // ...?extraAssets.faces.cc?.values,
@@ -508,7 +509,7 @@ class Servant extends BasicServant {
       }
     }
 
-    _icon = extraAssets.faces.ascension?[ascension] ?? icon;
+    _icon = extraAssets.faces.transformGroup?[ascension] ?? extraAssets.faces.ascension?[ascension] ?? icon;
     if (db.gameData.isJustAddedCard(id)) return _icon;
     return bordered(_icon);
   }
@@ -1091,8 +1092,17 @@ class ExtraAssetsUrl {
   final Map<int, String>? equip;
   final Map<int, String>? cc;
   final Map<String, String>? imagePartsGroup;
+  final Map<int, String>? transformGroup;
 
-  const ExtraAssetsUrl({this.ascension, this.story, this.costume, this.equip, this.cc, this.imagePartsGroup});
+  const ExtraAssetsUrl({
+    this.ascension,
+    this.story,
+    this.costume,
+    this.equip,
+    this.cc,
+    this.imagePartsGroup,
+    this.transformGroup,
+  });
 
   Iterable<String> get allUrls sync* {
     if (ascension != null) yield* ascension!.values;
@@ -1101,6 +1111,7 @@ class ExtraAssetsUrl {
     if (cc != null) yield* cc!.values;
     if (story != null) yield* story!.values;
     if (imagePartsGroup != null) yield* imagePartsGroup!.values;
+    if (transformGroup != null) yield* transformGroup!.values;
   }
 
   factory ExtraAssetsUrl.fromJson(Map<String, dynamic> json) => _$ExtraAssetsUrlFromJson(json);
