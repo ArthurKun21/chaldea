@@ -122,7 +122,7 @@ class _FakerMenuDialogState extends State<FakerMenuDialog> with FakerRuntimeStat
             title: S.current.enhance,
             buttons: [
               _ButtonData(
-                icon: FontAwesomeIcons.dice.data,
+                icon: FontAwesomeIcons.dice,
                 name: S.current.gacha,
                 enabled: isLoggedIn,
                 onTap: () {
@@ -130,7 +130,7 @@ class _FakerMenuDialogState extends State<FakerMenuDialog> with FakerRuntimeStat
                 },
               ),
               _ButtonData(
-                icon: FontAwesomeIcons.listCheck.data,
+                icon: FontAwesomeIcons.listCheck,
                 name: S.current.master_mission,
                 enabled: isLoggedIn,
                 onTap: () {
@@ -138,7 +138,7 @@ class _FakerMenuDialogState extends State<FakerMenuDialog> with FakerRuntimeStat
                 },
               ),
               _ButtonData(
-                icon: FontAwesomeIcons.users.data,
+                icon: FontAwesomeIcons.users,
                 name: '从者强化',
                 enabled: isLoggedIn,
                 onTap: () {
@@ -146,7 +146,7 @@ class _FakerMenuDialogState extends State<FakerMenuDialog> with FakerRuntimeStat
                 },
               ),
               _ButtonData(
-                icon: FontAwesomeIcons.streetView.data,
+                icon: FontAwesomeIcons.streetView,
                 name: '礼装强化',
                 enabled: isLoggedIn,
                 onTap: () {
@@ -223,7 +223,7 @@ class _FakerMenuDialogState extends State<FakerMenuDialog> with FakerRuntimeStat
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 2),
                   child: button.icon.isFontAwesome
-                      ? FaIcon(FaIconData(button.icon), size: (y1 - 4) * 0.8, color: color)
+                      ? FaIcon(button.icon, size: (y1 - 4) * 0.8, color: color)
                       : Icon(button.icon, size: y1 - 4, color: color),
                 ),
               ),
